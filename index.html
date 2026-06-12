@@ -1,0 +1,2536 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<meta name="theme-color" content="#0d3158"/>
+<title>Consulta RE 375/26</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+:root{
+  --navy:#0d3158; --blue:#225bb0; --accent:#0891b2; --viol:#7c3aed;
+  --bg:#eef2f7; --surf:#fff; --line:#e2e8f0; --line2:#cbd5e1;
+  --txt:#0d3158; --txt2:#475569; --txt3:#94a3b8;
+  --ok:#16a34a; --warn:#d97706; --bad:#dc2626;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:15px;line-height:1.4;-webkit-font-smoothing:antialiased;padding-bottom:90px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+@keyframes slideUp{from{transform:translateY(14px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+
+/* HEADER */
+.hd{position:sticky;top:0;z-index:50;background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:13px 16px;box-shadow:0 2px 14px rgba(13,31,74,.18);}
+.hd .t{font-size:16px;font-weight:900;display:flex;align-items:center;gap:9px;}
+.hd .t .d{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;}
+.hd .s{font-size:10.5px;opacity:.78;font-weight:600;margin-top:2px;margin-left:39px;}
+.hd .sync{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:11px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.hd .vbtn{position:absolute;top:14px;right:60px;width:38px;height:38px;border-radius:11px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* ░░ MODO ESCRITORIO (body.dk) — misma app, layout PC ░░ */
+body.dk{background:#e8edf5;}
+body.dk .tabs,body.dk .view{max-width:1100px;margin:0 auto;}
+body.dk .view{background:var(--bg);min-height:calc(100vh - 130px);box-shadow:0 0 40px rgba(13,31,74,.06);}
+body.dk .stats{padding:22px 30px;}
+body.dk .search-wrap,body.dk .grp-bar,body.dk .f-tags,body.dk .buscar-tools{max-width:none;}
+body.dk .num-hero{display:flex;align-items:center;gap:26px;}
+body.dk .num-hero .nh-main{margin-bottom:0;flex:1;}
+body.dk .num-hero .nh-side{flex:1.15;}
+body.dk .acc-grid{grid-template-columns:repeat(4,1fr);}
+body.dk .grp-panel{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+body.dk .results{padding:14px;}
+body.dk #cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start;}
+body.dk #cards .card{margin:0;}
+body.dk #cards .guide,body.dk #cards .empty,body.dk #cards .res-count{grid-column:1/-1;}
+body.dk .ficha{top:28px;bottom:28px;left:50%;right:auto;transform:translateX(-50%);width:min(800px,94vw);border-radius:22px;overflow:hidden;box-shadow:0 0 0 100vmax rgba(13,31,74,.45),0 24px 70px rgba(13,31,74,.4);}
+body.dk .fm-ov{align-items:center;padding:30px;}
+body.dk .fm-card{border-radius:20px;}
+.hd .sync.spinning i{animation:spin .7s linear infinite;}
+
+/* TABS */
+.tabs{display:flex;gap:0;background:var(--surf);border-bottom:1px solid var(--line);position:sticky;top:62px;z-index:45;}
+.tab{flex:1;text-align:center;padding:12px 4px;font-size:11.5px;font-weight:800;color:var(--txt3);cursor:pointer;border-bottom:3px solid transparent;display:flex;align-items:center;justify-content:center;gap:5px;white-space:nowrap;}
+.tab.active{color:var(--navy);border-bottom-color:var(--blue);}
+
+.view{display:none;}
+.view.active{display:block;animation:slideUp .25s ease;}
+
+/* ░░ SEARCH (consulta tab) ░░ */
+.search-wrap{padding:14px 14px 8px;position:sticky;top:108px;z-index:40;background:var(--bg);}
+.search-box{display:flex;align-items:center;gap:10px;background:var(--surf);border:2px solid var(--line2);border-radius:14px;padding:0 14px;box-shadow:0 2px 10px rgba(13,31,74,.06);}
+.search-box:focus-within{border-color:var(--blue);}
+.search-box i{color:var(--txt3);font-size:16px;}
+.search-box input{flex:1;border:none;outline:none;background:transparent;font-size:16px;padding:14px 0;color:var(--txt);font-weight:600;}
+.search-box .clr{color:var(--txt3);font-size:18px;cursor:pointer;padding:6px;display:none;}
+.search-box .clr.show{display:block;}
+
+.ugl-sel-wrap{padding:0 14px 10px;}
+.ugl-sel{width:100%;padding:13px 14px;border-radius:13px;border:1.5px solid var(--line2);background:var(--surf);font-size:14px;font-weight:700;color:var(--txt);cursor:pointer;}
+
+.results{padding:2px 14px 0;}
+.res-count{font-size:11.5px;color:var(--txt3);font-weight:700;margin:4px 2px 10px;}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:14px 15px;margin-bottom:11px;box-shadow:0 1px 5px rgba(13,31,74,.05);cursor:pointer;}
+.card:active{transform:scale(.985);}
+.card .name{font-size:15px;font-weight:900;color:var(--navy);line-height:1.25;margin-bottom:5px;}
+.card .meta{display:flex;align-items:center;gap:7px;flex-wrap:wrap;font-size:11px;color:var(--txt2);font-weight:600;margin-bottom:10px;}
+.card .meta .tag{background:#f1f5f9;border-radius:6px;padding:2px 8px;font-weight:800;color:#475569;}
+.card .meta .ugl{background:#eef5ff;color:#225bb0;}
+.card .state{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:11px;font-size:12.5px;font-weight:800;}
+.card .state .ic{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.card .state .arrow{margin-left:auto;color:var(--txt3);}
+.empty{text-align:center;padding:46px 20px;color:var(--txt3);}
+.empty .big{font-size:40px;margin-bottom:14px;opacity:.5;}
+.empty .t{font-size:15px;font-weight:800;color:var(--txt2);margin-bottom:6px;}
+.guide{text-align:center;padding:36px 24px;color:var(--txt2);}
+.guide .ic{font-size:38px;color:var(--blue);opacity:.6;margin-bottom:16px;}
+.guide h3{font-size:16px;font-weight:800;color:var(--navy);margin:0 0 8px;}
+.guide p{font-size:13px;margin:0;line-height:1.6;}
+
+/* barra de filtros agrupados por temática (réplica visor, mobile) */
+.grp-bar{display:flex;gap:8px;overflow-x:auto;padding:10px 14px 2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.grp-bar::-webkit-scrollbar{display:none;}
+.grp-btn{flex-shrink:0;display:inline-flex;align-items:center;gap:7px;border:1.5px solid #c5d3e6;border-radius:12px;padding:9px 13px;font-size:12px;font-weight:800;background:var(--surf);color:#3b4a5e;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.grp-btn.act{border-color:var(--blue);background:#eef3fa;}
+.grp-btn .bdg{background:var(--blue);color:#fff;border-radius:99px;font-size:10.5px;padding:1px 8px;font-weight:800;}
+.grp-btn .car{font-size:8px;opacity:.6;}
+.grp-panel{margin:10px 14px 0;border:1.5px solid #c5d3e6;border-radius:14px;padding:13px 14px;background:var(--surf);box-shadow:0 1px 3px rgba(13,49,88,.07);display:flex;flex-direction:column;gap:12px;}
+.grp-cell .grp-lbl{font-size:11px;color:var(--txt3);font-weight:700;margin-bottom:6px;}
+.grp-cell select{width:100%;}
+.f-tags{display:flex;gap:6px;flex-wrap:wrap;padding:8px 14px 0;}
+.f-tags:empty{padding:0;}
+.f-tag{display:inline-flex;align-items:center;gap:6px;background:#eef3fa;color:var(--blue);border:1px solid #c5d3e6;border-radius:8px;padding:4px 9px 4px 11px;font-size:11px;font-weight:700;}
+.f-tag b{cursor:pointer;font-weight:900;}
+.f-tag.clr-all{background:#fef2f2;color:#dc2626;border-color:#fecaca;cursor:pointer;}
+
+/* ░░ STATS (tab) ░░ */
+.stats{padding:14px;}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.kpi{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:0 1px 5px rgba(13,31,74,.05);}
+.kpi .n{font-size:26px;font-weight:900;line-height:1;}
+.kpi .l{font-size:11px;font-weight:700;color:var(--txt2);margin-top:5px;line-height:1.3;}
+.kpi .sub{font-size:9.5px;color:var(--txt3);margin-top:3px;}
+.sec-ttl{font-size:12px;font-weight:900;color:var(--navy);text-transform:uppercase;letter-spacing:.04em;margin:18px 2px 10px;display:flex;align-items:center;gap:8px;}
+.funnel-item{background:var(--surf);border:1px solid var(--line);border-radius:13px;margin-bottom:9px;overflow:hidden;}
+.funnel-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer;}
+.funnel-head .l{display:flex;align-items:center;gap:11px;font-size:13.5px;font-weight:800;}
+.funnel-head .ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.funnel-head .r{display:flex;align-items:center;gap:10px;}
+.funnel-head .n{font-size:23px;font-weight:900;}
+.funnel-head .pct{font-size:10px;color:var(--txt3);font-weight:700;}
+.funnel-head .chev{color:var(--txt3);transition:transform .2s;}
+.funnel-head.open .chev{transform:rotate(180deg);}
+.funnel-detail{display:none;padding:0 15px 13px;}
+.funnel-detail.open{display:block;}
+.funnel-detail .row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:12.5px;}
+.funnel-detail .row:last-child{border-bottom:none;}
+.funnel-detail .row .lbl{color:var(--txt2);font-weight:600;}
+.funnel-detail .row .v{font-weight:900;color:var(--txt);}
+.funnel-detail .row .bar{flex:1;height:6px;background:#f1f5f9;border-radius:3px;margin:0 10px;overflow:hidden;}
+.funnel-detail .row .bar i{display:block;height:100%;border-radius:3px;}
+
+/* ░░ FICHA ░░ */
+.ficha{position:fixed;inset:0;z-index:100;background:var(--bg);display:none;flex-direction:column;}
+.ficha.open{display:flex;}
+.ficha-head{background:linear-gradient(135deg,var(--navy),var(--blue));color:#fff;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;box-shadow:0 2px 12px rgba(13,31,74,.2);}
+.ficha-head .back{width:38px;height:38px;border-radius:11px;border:1.5px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;font-size:17px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.ficha-head .h-name{font-size:16px;font-weight:900;line-height:1.25;}
+.ficha-head .h-meta{font-size:11px;opacity:.8;margin-top:3px;font-weight:600;}
+.ficha-head .wabtn{margin-left:auto;flex-shrink:0;width:42px;height:42px;border-radius:12px;border:none;background:#25d366;color:#fff;font-size:21px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(37,211,102,.4);}
+.ficha-head .wabtn:active{transform:scale(.94);}
+.buscar-tools{display:none;padding:10px 14px 0;align-items:center;justify-content:space-between;gap:10px;}
+.buscar-tools.show{display:flex;}
+.buscar-tools .bt-count{font-size:11.5px;font-weight:800;color:var(--txt2);}
+.xls-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border:none;border-radius:10px;background:linear-gradient(135deg,#16a34a,#107c41);color:#fff;font-size:12px;font-weight:800;cursor:pointer;box-shadow:0 2px 8px rgba(16,124,65,.3);font-family:inherit;white-space:nowrap;}
+.xls-btn:active{transform:scale(.96);}
+.vt-btn{display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:12px 22px;border:none;border-radius:12px;background:linear-gradient(135deg,#225bb0,#0d3158);color:#fff;font-size:13px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(34,91,176,.3);font-family:inherit;}
+.vt-btn:active{transform:scale(.96);}
+/* copiado puntual de datos */
+.tag-copy{cursor:copy;border:1px dashed #b8c6da;}
+.tag-copy i{font-size:8.5px;opacity:.55;margin-left:2px;}
+.tag-copy.copied{background:#dcfce7!important;color:#15803d!important;border-color:#86efac!important;}
+.copy-btn{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border:1px dashed #b8c6da;border-radius:8px;background:#f8fafc;color:#225bb0;font-size:10px;font-weight:800;cursor:copy;font-family:inherit;white-space:nowrap;}
+.copy-btn.copied{background:#dcfce7;color:#15803d;border-color:#86efac;}
+.ficha-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;}
+.f-hero{border-radius:14px;padding:16px;margin-bottom:14px;color:#fff;}
+.f-hero .lbl{font-size:11px;font-weight:700;opacity:.85;text-transform:uppercase;letter-spacing:.05em;}
+.f-hero .val{font-size:21px;font-weight:900;margin-top:4px;line-height:1.15;}
+.f-hero .desc{font-size:12px;opacity:.9;margin-top:5px;}
+.f-sec{background:var(--surf);border:1px solid var(--line);border-radius:13px;margin-bottom:10px;overflow:hidden;}
+.f-sec-head{padding:13px 15px;font-size:12.5px;font-weight:900;color:var(--navy);background:#f7faff;cursor:pointer;display:flex;align-items:center;justify-content:space-between;}
+.f-sec-head .lft{display:flex;align-items:center;gap:9px;}
+.f-sec-head .chev{color:var(--txt3);transition:transform .2s;font-size:12px;}
+.f-sec-head.open .chev{transform:rotate(180deg);}
+.f-sec-body{display:none;padding:4px 15px 10px;border-top:1px solid var(--line);}
+.f-sec-body.open{display:block;}
+.f-row{display:flex;flex-direction:column;gap:2px;padding:9px 0;border-bottom:1px solid #f1f5f9;}
+.f-row:last-child{border-bottom:none;}
+.f-row .k{font-size:10px;font-weight:800;color:var(--txt3);text-transform:uppercase;letter-spacing:.04em;}
+.f-row .v{font-size:14px;font-weight:700;color:var(--txt);word-break:break-word;white-space:pre-wrap;line-height:1.4;}
+.f-row .v.muted{color:var(--txt3);font-weight:500;font-style:italic;}
+
+/* SPLASH */
+.splash{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center;}
+.splash.hide{display:none;}
+.splash .logo{width:68px;height:68px;border-radius:18px;background:linear-gradient(135deg,var(--viol),var(--accent));display:flex;align-items:center;justify-content:center;font-size:30px;color:#fff;margin-bottom:18px;box-shadow:0 8px 24px rgba(124,58,237,.3);}
+.splash h1{font-size:19px;font-weight:900;color:var(--navy);margin:0 0 4px;}
+.splash p{font-size:13px;color:var(--txt2);margin:0 0 22px;}
+.splash .ring{width:38px;height:38px;border:4px solid rgba(124,58,237,.18);border-top-color:var(--viol);border-radius:50%;animation:spin .8s linear infinite;}
+.splash .err{color:var(--bad);font-size:13px;font-weight:700;margin-top:16px;max-width:300px;}
+.splash .retry{margin-top:14px;padding:11px 24px;border-radius:11px;border:none;background:var(--viol);color:#fff;font-size:14px;font-weight:800;cursor:pointer;}
+
+/* ░░ NÚMEROS (réplica tablero) ░░ */
+.num-hero{background:linear-gradient(150deg,#312e81,#1e3a8a);border-radius:18px;padding:20px;color:#fff;margin-bottom:12px;box-shadow:0 8px 24px rgba(13,31,74,.18);}
+.num-hero .nh-main{margin-bottom:16px;}
+.num-hero .nh-dot{width:7px;height:7px;border-radius:50%;background:#86efac;box-shadow:0 0 10px #86efac;display:inline-block;margin-right:7px;vertical-align:middle;}
+.num-hero .nh-lbl{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.65);display:inline;}
+.num-hero .nh-big{font-size:54px;font-weight:900;line-height:.95;color:#86efac;letter-spacing:-.03em;margin-top:6px;}
+.num-hero .nh-sub{font-size:12.5px;color:rgba(255,255,255,.8);font-weight:700;margin-top:2px;}
+.num-hero .nh-side{display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.08);border-radius:13px;padding:14px 16px;}
+.num-hero .nh-item{flex:1;}
+.num-hero .nh-n{font-size:28px;font-weight:900;line-height:1;}
+.num-hero .nh-t{font-size:10px;font-weight:700;color:rgba(255,255,255,.75);text-transform:uppercase;letter-spacing:.03em;margin-top:4px;line-height:1.3;}
+.num-hero .nh-t span{display:block;font-size:9px;color:rgba(255,255,255,.5);text-transform:none;letter-spacing:0;}
+.num-hero .nh-line{width:1px;align-self:stretch;background:rgba(255,255,255,.15);}
+.num-hero2{display:flex;border-radius:16px;overflow:hidden;margin-bottom:18px;box-shadow:0 6px 18px rgba(13,31,74,.12);}
+.num-hero2 .nh2-l{flex:1.3;background:linear-gradient(150deg,#3730a3,#4f46e5);color:#fff;padding:18px;}
+.num-hero2 .nh2-lbl{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7);}
+.num-hero2 .nh2-big{font-size:40px;font-weight:900;line-height:1;margin-top:8px;}
+.num-hero2 .nh2-sub{font-size:11px;color:rgba(255,255,255,.8);font-weight:700;}
+.num-hero2 .nh2-r{flex:1;background:linear-gradient(150deg,#fff,#fef2f2);padding:18px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+.num-hero2 .nh2-badge{font-size:9px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:#dc2626;background:#fee2e2;padding:3px 10px;border-radius:99px;}
+.num-hero2 .nh2-n{font-size:44px;font-weight:900;color:#dc2626;line-height:1;margin-top:8px;}
+.num-hero2 .nh2-t{font-size:10px;font-weight:700;color:#475569;margin-top:5px;}
+.sec-note{font-size:11.5px;color:var(--txt2);margin:0 2px 12px;line-height:1.5;}
+.big-card{background:var(--surf);border:1px solid var(--line);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:0 1px 5px rgba(13,31,74,.05);}
+.big-head{display:flex;align-items:center;justify-content:space-between;padding:14px 15px;cursor:pointer;}
+.big-head .bh-l{display:flex;align-items:center;gap:11px;}
+.big-head .bh-ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;}
+.big-head .bh-lbl{font-size:13px;font-weight:800;color:var(--navy);line-height:1.2;max-width:170px;}
+.big-head .bh-r{display:flex;align-items:center;gap:9px;}
+.big-head .bh-n{font-size:25px;font-weight:900;}
+.big-head .bh-pct{font-size:11px;color:var(--txt3);font-weight:700;}
+.big-head .chev{color:var(--txt3);transition:transform .2s;}
+.big-head.open .chev{transform:rotate(180deg);}
+.big-detail{display:none;padding:4px 15px 12px;border-top:1px solid var(--line);}
+.big-detail.open{display:block;}
+.big-detail .row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #f6f8fb;}
+.big-detail .row:last-child{border-bottom:none;}
+.big-detail .row .lbl{font-size:12px;color:var(--txt2);font-weight:700;flex:0 0 42%;line-height:1.3;}
+.big-detail .row .bar{flex:1;height:7px;background:#f1f5f9;border-radius:4px;overflow:hidden;}
+.big-detail .row .bar i{display:block;height:100%;border-radius:4px;}
+.big-detail .row .v{font-size:14px;font-weight:900;color:var(--txt);min-width:54px;text-align:right;}
+.big-detail .row .v small{font-size:9px;color:var(--txt3);font-weight:700;margin-left:3px;}
+/* divisores de sección */
+.divider{display:flex;align-items:center;gap:10px;margin:20px 2px 12px;}
+.divider .ln{flex:1;height:1px;background:var(--line2);}
+.divider .vx{font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:var(--txt3);}
+/* acciones en curso */
+.acc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.acc{background:var(--surf);border:1px solid var(--line);border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:11px;}
+.acc .ic{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.acc .n{font-size:21px;font-weight:900;line-height:1;}
+.acc .l{font-size:9.5px;font-weight:700;color:var(--txt2);margin-top:3px;line-height:1.2;}
+/* gestión de firma (card → modal) */
+.gfA{background:linear-gradient(135deg,#0e7490,#14b8a6);border-radius:18px;padding:18px 20px;color:#fff;box-shadow:0 10px 26px rgba(8,145,178,.3);cursor:pointer;}
+.gfA .top{display:flex;align-items:center;justify-content:space-between;}
+.gfA .top .lf{display:flex;align-items:center;gap:11px;}
+.gfA .top .ic{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.gfA .top .ti{font-size:14px;font-weight:800;}
+.gfA .top .su{font-size:10.5px;opacity:.85;margin-top:2px;}
+.gfA .top .big{font-size:40px;font-weight:900;line-height:1;}
+.gfA .cta{margin-top:14px;background:rgba(255,255,255,.15);border-radius:10px;padding:9px;text-align:center;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:7px;}
+/* cierre del circuito (firmadas interactiva) */
+.cierre{background:linear-gradient(135deg,#15803d,#16a34a);border-radius:18px;padding:18px 20px;color:#fff;display:flex;align-items:center;gap:18px;box-shadow:0 10px 26px rgba(22,163,74,.3);cursor:pointer;}
+.cierre .big{font-size:52px;font-weight:900;line-height:.9;}
+.cierre .meta{flex:1;}
+.cierre .meta .k{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.85;}
+.cierre .meta .v{font-size:16px;font-weight:800;margin-top:3px;}
+.cierre .meta .s{font-size:11px;opacity:.82;margin-top:3px;}
+.cierre .chev{font-size:15px;opacity:.85;transition:transform .2s;}
+.cierre.open .chev{transform:rotate(180deg);}
+.firm-list{display:none;background:var(--surf);border:1px solid var(--line);border-top:none;border-radius:0 0 16px 16px;margin:-10px 6px 0;padding:16px 12px 8px;}
+.firm-list.open{display:block;}
+.firm-row{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #f1f5f9;cursor:pointer;}
+.firm-row:last-child{border-bottom:none;}
+.firm-row .nm{flex:1;min-width:0;}
+.firm-row .nm .p{font-size:12.5px;font-weight:800;color:var(--navy);line-height:1.25;}
+.firm-row .nm .u{font-size:10px;font-weight:700;color:var(--txt3);margin-top:2px;}
+.firm-row .fch{font-size:10px;font-weight:700;color:var(--txt2);text-align:right;line-height:1.4;flex-shrink:0;}
+/* modal caminito de firma */
+.fm-ov{position:fixed;inset:0;z-index:120;background:rgba(13,31,74,.5);display:none;align-items:flex-end;justify-content:center;}
+.fm-ov.open{display:flex;}
+.fm-card{background:var(--surf);border-radius:20px 20px 0 0;width:100%;max-width:560px;max-height:86vh;display:flex;flex-direction:column;animation:slideUp .25s ease;}
+.fm-head{background:linear-gradient(135deg,#0e7490,#14b8a6);color:#fff;border-radius:20px 20px 0 0;padding:16px 18px;display:flex;align-items:center;justify-content:space-between;}
+.fm-head .ti{font-size:14px;font-weight:900;display:flex;align-items:center;gap:9px;}
+.fm-head .n{font-size:26px;font-weight:900;}
+.fm-head .x{width:32px;height:32px;border-radius:10px;border:none;background:rgba(255,255,255,.18);color:#fff;font-size:15px;cursor:pointer;margin-left:10px;}
+.fm-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:10px 16px 18px;}
+.fm-stage{display:flex;align-items:center;gap:11px;padding:10px 2px;border-bottom:1px solid #f4f7fb;}
+.fm-stage:last-child{border-bottom:none;}
+.fm-stage .num{width:21px;height:21px;border-radius:50%;background:#eef2f7;color:var(--txt3);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.fm-stage.has .num{background:#16a34a;color:#fff;}
+.fm-stage.firm .num{background:#15803d;color:#fff;}
+.fm-stage.neg .num{background:#dc2626;color:#fff;}
+.fm-stage .nm{font-size:11.5px;font-weight:700;color:var(--txt);flex:0 0 44%;line-height:1.2;}
+.fm-stage .bar{flex:1;height:7px;background:#eef2f7;border-radius:4px;overflow:hidden;}
+.fm-stage .bar i{display:block;height:100%;border-radius:4px;background:#16a34a;}
+.fm-stage.firm .bar i{background:#15803d;}
+.fm-stage.neg .bar i{background:#dc2626;}
+.fm-stage .vv{font-size:14px;font-weight:900;min-width:28px;text-align:right;color:var(--txt);}
+.fm-stage.z .nm,.fm-stage.z .vv{color:#b9c4d4;}
+/* comunicación: botones de filtro del detalle */
+.sc-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 11px;border-radius:8px;border:1.5px solid #cbd5e1;background:var(--surf);color:#64748b;font-size:10.5px;font-weight:800;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.sc-btn.on{background:#0d3158;color:#fff;border-color:#0d3158;}
+/* ░░ CAMINITO HORIZONTAL (tab Firma) — línea de tiempo minimalista ░░ */
+.cam-strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;}
+.cam-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px 5px 6px;border-radius:999px;border:1.5px solid var(--sc);background:var(--surf);cursor:pointer;transition:transform .1s;}
+.cam-chip:active{transform:scale(.95);}
+.cam-chip .n{width:16px;height:16px;border-radius:50%;background:var(--sc);color:#fff;font-size:8.5px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.cam-chip .l{font-size:9.5px;font-weight:800;color:var(--navy);white-space:nowrap;}
+.cam-chip .v{font-size:11.5px;font-weight:900;color:var(--sc);}
+.cam-chip.z{opacity:.38;border-style:dashed;padding:3px 8px 3px 4px;}
+.cam-chip.z .n{width:13px;height:13px;font-size:7px;background:#cbd5e1;}
+.cam-chip.z .l{font-size:8px;font-weight:700;color:var(--txt3);}
+.cam-chip.z .v{font-size:9px;color:#94a3b8;}
+.cam-chip.firm{background:#15803d;border-color:#15803d;box-shadow:0 2px 8px rgba(21,128,61,.35);}
+.cam-chip.firm .n{background:rgba(255,255,255,.28);}
+.cam-chip.firm .l,.cam-chip.firm .v{color:#fff;}
+.cam-chip.neg{border-color:#dc2626;background:#fef2f2;}
+.cam-chip.neg .n{background:#dc2626;}
+.cam-chip.neg .l{color:#b91c1c;}
+.cam-chip.neg .v{color:#dc2626;}
+.cam-chip.on{outline:2.5px solid var(--sc);outline-offset:1px;}
+.cam-chip.neg.on{outline-color:#dc2626;}
+.et-badge{display:inline-flex;align-items:center;gap:5px;font-size:9px;font-weight:800;color:var(--ec);background:#fff;border:1px solid var(--ec);border-radius:7px;padding:3px 8px;line-height:1.2;}
+
+</style>
+</head>
+<body>
+
+<!-- PORTÓN DE ACCESO · clave hasheada SHA-256 (misma clave del visor) · candado operativo, no bóveda -->
+<div id="authGate" style="position:fixed;inset:0;z-index:300;background:linear-gradient(135deg,#0d1b3e,#1e3a8a 60%,#312e81);display:flex;align-items:center;justify-content:center;padding:24px;">
+  <div style="background:#fff;border-radius:22px;padding:34px 30px;max-width:380px;width:100%;box-shadow:0 30px 90px rgba(0,0,0,.5);text-align:center;">
+    <div style="width:60px;height:60px;border-radius:16px;background:linear-gradient(135deg,#0d3158,#312e81);display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+      <i class="fa-solid fa-lock" style="color:#fff;font-size:23px;"></i>
+    </div>
+    <div style="font-size:17px;font-weight:900;color:#0d3158;margin-bottom:4px;">Consulta RE 375/26</div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:20px;">Ingresá la clave de acceso para continuar</div>
+    <input id="authPass" type="password" autocomplete="off" placeholder="Clave de acceso" onkeydown="if(event.key==='Enter')authTry();"
+      style="width:100%;box-sizing:border-box;padding:13px 15px;border:2px solid #e2e8f0;border-radius:12px;font-size:16px;text-align:center;letter-spacing:.05em;outline:none;" onfocus="this.style.borderColor='#6366f1';" onblur="this.style.borderColor='#e2e8f0';">
+    <div id="authError" style="display:none;color:#dc2626;font-size:12px;font-weight:700;margin-top:10px;">Clave incorrecta. Volvé a intentar.</div>
+    <label style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px;font-size:12.5px;color:#475569;font-weight:700;cursor:pointer;user-select:none;">
+      <input type="checkbox" id="authRemember" style="width:17px;height:17px;accent-color:#0891b2;cursor:pointer;"> Recordar en este dispositivo
+    </label>
+    <button onclick="authTry()" style="width:100%;margin-top:16px;padding:13px;border:none;border-radius:12px;background:linear-gradient(135deg,#0891b2,#0d3158);color:#fff;font-size:14px;font-weight:900;letter-spacing:.3px;cursor:pointer;box-shadow:0 6px 18px rgba(8,145,178,.35);font-family:inherit;">
+      <i class="fa-solid fa-arrow-right-to-bracket" style="margin-right:7px;"></i>Ingresar
+    </button>
+    <div style="font-size:9.5px;color:#94a3b8;margin-top:16px;line-height:1.5;">Acceso de uso interno · la clave se pide en cada ingreso, salvo que marques "Recordar".</div>
+  </div>
+</div>
+
+<!-- SPLASH -->
+<div class="splash" id="splash">
+  <div class="logo"><i class="fa-solid fa-chart-simple"></i></div>
+  <h1>Consulta RE 375/26</h1>
+  <p>UGTO / POPP · cargando base…</p>
+  <div class="ring" id="splashRing"></div>
+  <div class="err" id="splashErr" style="display:none;"></div>
+  <button class="retry" id="splashRetry" style="display:none;" onclick="cargarDatos()">Reintentar</button>
+</div>
+
+<!-- HEADER -->
+<div class="hd">
+  <div class="t"><span class="d"><i class="fa-solid fa-chart-simple"></i></span>Consulta RE 375/26</div>
+  <div class="s">UGTO / POPP · panel de gestión</div>
+  <button class="vbtn" id="lockBtn" onclick="authLogout()" title="Cerrar sesión / cambiar clave" style="right:106px;"><i class="fa-solid fa-lock"></i></button>
+  <button class="vbtn" id="vistaBtn" onclick="toggleVista()" title="Cambiar vista"><i class="fa-solid fa-desktop"></i></button>
+  <button class="sync" id="syncBtn" onclick="cargarDatos(true)"><i class="fa-solid fa-arrows-rotate"></i></button>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" id="tabStats" onclick="setTab('stats')"><i class="fa-solid fa-chart-simple"></i> Números</div>
+  <div class="tab" id="tabBuscar" onclick="setTab('buscar')"><i class="fa-solid fa-magnifying-glass"></i> Buscar</div>
+  <div class="tab" id="tabFirma" onclick="setTab('firma')"><i class="fa-solid fa-pen-nib"></i> Firma</div>
+  <div class="tab" id="tabCom" onclick="setTab('com')"><i class="fa-solid fa-satellite-dish"></i> Comunic.</div>
+</div>
+
+<!-- VIEW: BUSCAR -->
+<div class="view" id="viewBuscar">
+  <div class="search-wrap">
+    <div class="search-box">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input type="text" id="q" placeholder="Buscar prestador, SAP…" oninput="onSearch()" autocomplete="off"/>
+      <span class="clr" id="clrBtn" onclick="clearSearch()"><i class="fa-solid fa-circle-xmark"></i></span>
+    </div>
+  </div>
+  <div class="grp-bar" id="grpBar"></div>
+  <div class="grp-panel" id="grpPanel" style="display:none;"></div>
+  <div class="f-tags" id="fTags"></div>
+  <div class="buscar-tools" id="buscarTools">
+    <span class="bt-count" id="btCount"></span>
+    <button class="xls-btn" onclick="exportBuscarXLS()"><i class="fa-solid fa-file-excel"></i> Descargar Excel</button>
+  </div>
+  <!-- selects reales de filtro (mismos criterios que la tabla de prestadores del visor);
+       viven acá ocultos y se reubican dentro del panel de su temática -->
+  <div id="rawFilters" style="display:none;">
+    <select class="ugl-sel" id="fUgl" onchange="renderBuscar()"></select>
+    <select class="ugl-sel" id="fEstado" onchange="renderBuscar()"></select>
+    <select class="ugl-sel" id="fTiempo" onchange="renderBuscar()"><option value="">Tiempo: Todos</option><option value="V">🟢 ≤ 1 mes</option><option value="A">🟡 2–3 meses</option><option value="R">🔴 + 3 meses</option></select>
+    <select class="ugl-sel" id="fCumple" onchange="renderBuscar()"><option value="">Cumple 375: Todos</option><option value="PLENO">✓ Pleno</option><option value="PARCIAL">◐ Parcial</option><option value="NINGUNO">✗ Ninguno</option></select>
+    <select class="ugl-sel" id="fRecon" onchange="renderBuscar()"><option value="">Reconsideración: Todos</option><option value="RECALIFICA">✓ Recalifica (todos)</option><option value="G_Imágenes">✓ Recalifica · Imágenes</option><option value="G_Especialidades">✓ Recalifica · Especialidades</option><option value="G_Oftalmología">✓ Recalifica · Oftalmología</option><option value="REVISION">? Requiere revisión</option><option value="SIN_CUMPLIR">✗ Sin cambio</option></select>
+    <select class="ugl-sel" id="fPopp" onchange="renderBuscar()"></select>
+    <select class="ugl-sel" id="fGrupoNota" onchange="renderBuscar()"></select>
+    <select class="ugl-sel" id="fGrupoOK" onchange="renderBuscar()"></select>
+    <select class="ugl-sel" id="fPvUgl" onchange="renderBuscar()"><option value="">PV a UGL: Todos</option><option value="SI">📨 Con PV a UGL</option><option value="NO">Sin PV a UGL</option></select>
+    <select class="ugl-sel" id="fMail" onchange="renderBuscar()"><option value="">Notif. UGL: Todos</option><option value="SI">📋 Mail enviado</option><option value="PEND">📭 Pendiente</option><option value="RENOT">🔁 Renotificado</option></select>
+    <select class="ugl-sel" id="fRespUGL" onchange="renderBuscar()"><option value="">Respondió UGL: Todos</option><option value="SI">✓ Sí respondió</option><option value="NO">✗ No respondió</option><option value="DOCU">📄 Docu actualizada</option><option value="CONSULTA">💬 Consulta documental</option></select>
+    <select class="ugl-sel" id="fResuelto" onchange="renderBuscar()"><option value="">Resolución: Todos</option><option value="SI">✓ Resuelto</option><option value="CONSRESP">💬 Consulta respondida</option><option value="ANALISIS">⏳ Análisis pendiente</option><option value="RECHAZADO">✗ Rechazado</option></select>
+    <select class="ugl-sel" id="fNotaPV" onchange="renderBuscar()"><option value="">NOTA/PV: Todos</option><option value="NOTA">📄 Con NOTA enviada</option><option value="PV">📋 Con PV enviado</option><option value="AMBOS">📄📋 NOTA y PV</option><option value="NINGUNO">Sin NOTA ni PV</option></select>
+    <select class="ugl-sel" id="fViab" onchange="renderBuscar()"><option value="">Viabilizador: Todos</option><option value="SI">🔑 Con viabilizador</option><option value="NO">Sin viabilizador</option></select>
+    <select class="ugl-sel" id="fVig" onchange="renderBuscar()"><option value="">Contrato: Todos</option><option value="SI">Vigente SI</option><option value="NO">Vigente NO</option></select>
+    <select class="ugl-sel" id="fEE" onchange="renderBuscar()"><option value="">Con/Sin EE</option><option value="SI">📎 Con EE</option><option value="NO">⚠ Sin EE</option></select>
+    <select class="ugl-sel" id="fM69" onchange="renderBuscar()"><option value="">Internación: Todos</option><option value="SI">🏥 Internación (M69)</option><option value="NO">Ambulatorio</option></select>
+    <select class="ugl-sel" id="fMsg" onchange="renderBuscar()"><option value="">Mensaje: Todos</option><option value="CON">Con mensaje</option><option value="SIN">Sin mensaje</option></select>
+  </div>
+  <div class="results">
+    <div class="res-count" id="resCount"></div>
+    <div id="cards"></div>
+  </div>
+</div>
+
+<!-- VIEW: STATS -->
+<div class="view active" id="viewStats">
+  <div class="stats" id="statsContent"></div>
+</div>
+
+<!-- VIEW: GESTIÓN DE FIRMA -->
+<div class="view" id="viewFirma">
+  <div class="stats" id="firmaContent"></div>
+</div>
+
+<!-- VIEW: COMUNICACIÓN -->
+<div class="view" id="viewCom">
+  <div class="stats" id="comContent">
+    <div class="empty" style="text-align:center;padding:50px 20px;color:var(--txt3);">
+      <div style="font-size:34px;margin-bottom:12px;"><i class="fa-solid fa-satellite-dish"></i></div>
+      <div style="font-size:14px;font-weight:800;color:var(--txt2);">Comunicación operativa</div>
+      <div style="font-size:12px;margin-top:6px;">En construcción · próximo paso del plan</div>
+    </div>
+  </div>
+</div>
+
+<!-- FICHA -->
+<div class="ficha" id="ficha">
+  <div class="ficha-head">
+    <button class="back" onclick="cerrarFicha()"><i class="fa-solid fa-arrow-left"></i></button>
+    <div><div class="h-name" id="fNombre"></div><div class="h-meta" id="fMeta"></div></div>
+    <button class="wabtn" id="pdfBtn" onclick="descargarPDF()" title="Descargar ficha en PDF" style="background:#dc2626;box-shadow:0 3px 10px rgba(220,38,38,.4);font-size:17px;"><i class="fa-solid fa-file-pdf"></i></button>
+    <button class="wabtn" onclick="enviarWhatsApp()" title="Enviar resumen por WhatsApp" style="margin-left:8px;"><i class="fa-brands fa-whatsapp"></i></button>
+  </div>
+  <div class="ficha-body" id="fBody"></div>
+</div>
+
+<!-- MODAL: CAMINITO DE FIRMA -->
+<div class="fm-ov" id="fmOv" onclick="if(event.target===this)cerrarModalFirma()">
+  <div class="fm-card">
+    <div class="fm-head">
+      <div><div class="ti"><i class="fa-solid fa-pen-nib"></i> Gestión de firma de adenda</div><div style="font-size:10px;opacity:.85;margin-top:3px;" id="fmSub"></div></div>
+      <div style="display:flex;align-items:center;"><span class="n" id="fmTotal"></span><button class="x" onclick="cerrarModalFirma()"><i class="fa-solid fa-xmark"></i></button></div>
+    </div>
+    <div class="fm-body" id="fmBody"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+"use strict";
+/* ====== MOTOR REUSADO DEL VISOR ====== */
+  function parseCSV(text){
+    // Split en líneas RESPETANDO comillas: un salto de línea dentro de una celda
+    // entrecomillada NO corta la línea lógica. Esto evita que las observaciones
+    // multilínea (o la nueva columna VIABILIZADOR) corran los bloques/KPIs.
+    var lines = (function(t){
+      var out=[], cur='', inQ=false;
+      for(var p=0;p<t.length;p++){
+        var ch=t[p];
+        if(ch==='"'){ inQ=!inQ; cur+=ch; }
+        else if((ch==='\n'||ch==='\r') && !inQ){
+          if(ch==='\r' && t[p+1]==='\n') p++; // CRLF
+          out.push(cur); cur='';
+        } else { cur+=ch; }
+      }
+      if(cur.length) out.push(cur);
+      return out;
+    })(text);
+    // Limpiar comillas de envoltura de cada celda al hacer split posterior:
+    // se define un helper splitCells que respeta comillas dentro de una línea lógica.
+    function splitCells(line){
+      var cells=[], field='', inQ=false;
+      for(var p=0;p<line.length;p++){
+        var ch=line[p], nx=line[p+1];
+        if(inQ){
+          if(ch==='"'){ if(nx==='"'){ field+='"'; p++; } else { inQ=false; } }
+          else field+=ch;
+        } else {
+          if(ch==='"') inQ=true;
+          else if(ch===';'){ cells.push(field); field=''; }
+          else field+=ch;
+        }
+      }
+      cells.push(field);
+      return cells;
+    }
+    var out = {}, i = 0;
+    function skipEmpty(){ while(i<lines.length && (!lines[i].trim()||lines[i].toUpperCase().startsWith('HOJA'))) i++; }
+    function readBlock(){
+      skipEmpty(); if(i>=lines.length) return null;
+      var headers = splitCells(lines[i]).map(function(h){return h.trim();}); i++;
+      var rows = [];
+      while(i<lines.length && lines[i].trim() && !lines[i].toUpperCase().startsWith('HOJA')){
+        var cols = splitCells(lines[i]).map(function(c){return c.trim();});
+        var row = {}; headers.forEach(function(h,idx){row[h]=cols[idx]||'';});
+        rows.push(row); i++;
+      }
+      return {headers:headers, rows:rows};
+    }
+    out.mesa        = readBlock();
+    out.ultimoEstado= readBlock();
+    out.mensaje     = readBlock();
+    out.crossSem    = readBlock();
+    out.ugl         = readBlock();
+    out.intervA     = readBlock();
+    out.migrado     = readBlock();
+    out.evalPopp    = readBlock();
+    out.intervB     = readBlock();
+    out.contractual = readBlock();
+    out.intervC     = readBlock();  // INTERVENCION UGTO -C (viene después de contractual)
+    out.grupoNota   = readBlock();
+    out.resultado375= readBlock();
+    out.grupoOk     = readBlock();   // bloque GRUPO OK aggregate — mantiene alineación
+    out.modulosSnota= readBlock();
+    // PRESTADORES — línea con "PRESTADOR;UGL"
+    while(i<lines.length && !lines[i].includes('PRESTADOR;UGL')) i++;
+    if(i<lines.length){
+      var ph=splitCells(lines[i]).map(function(h){return h.trim();}); i++;
+      var prows=[];
+      while(i<lines.length && lines[i].trim() && !lines[i].toUpperCase().startsWith('HOJA') && lines[i].replace(/;/g,'').trim()){
+        var ps=splitCells(lines[i]).map(function(c){return c.trim();});
+        if(!ps[0]||ps[0].toLowerCase().includes('suma')){i++;continue;}
+        // Skip rows without a valid SAP (numeric) — filters noise rows
+        var sapVal=ps[2]||''; if(!sapVal||isNaN(parseInt(sapVal,10))){i++;continue;}
+        var pr={}; ph.forEach(function(h,idx){pr[h]=ps[idx]||'';});
+        // EXPEDIENTE is col index 3 in the updated CSV
+        if(!pr['EXPEDIENTE']&&ps.length>3) pr['EXPEDIENTE']=ps[3]||'';
+        prows.push(pr); i++;
+      }
+      out.prestadores={headers:ph,rows:prows};
+    }
+    // GRUPO OK PIVOT (UGL×Grupos) — al final del CSV, buscar hacia atrás
+    (function(){
+      var j=lines.length-1;
+      while(j>=0 && !lines[j].startsWith('UGL;Especialidades')) j--;
+      if(j<0){out.grupoOkPivot=null;return;}
+      var h=splitCells(lines[j]).map(function(c){return c.trim();}); j++;
+      var rr=[];
+      // estados/headers que delimitan otros bloques y NO deben entrar al pivot
+      var STOP={'VIGENTE':1,'NO':1,'SI':1,'SÍ':1};
+      while(j<lines.length && lines[j].trim() && !lines[j].toUpperCase().startsWith('HOJA')){
+        var cc=splitCells(lines[j]).map(function(c){return c.trim();});
+        var first=(cc[0]||'').trim();
+        var firstU=first.toUpperCase();
+        // corta el bloque al toparse con filas de otros bloques (VIGENTE/NO/SI), totales, o primer campo numérico/vacío
+        if(!first || STOP[firstU] || firstU.indexOf('SUMA')>=0 || /^\d+$/.test(first)){
+          if(firstU.indexOf('SUMA')>=0){ j++; continue; } // suma del propio pivot: saltar
+          break; // VIGENTE / NO / SI / numérico suelto / vacío → fin del pivot
+        }
+        var row={}; h.forEach(function(k,idx){row[k]=cc[idx]||'';});
+        rr.push(row); j++;
+      }
+      out.grupoOkPivot={headers:h,rows:rr};
+    })();
+    // VIGENCIA CONTRACTUAL (bloque VIGENTE) — leído por header, independiente de la posición
+    (function(){
+      var j=0;
+      while(j<lines.length && !/^VIGENTE\s*;/i.test(lines[j].trim())) j++;
+      if(j>=lines.length){out.vigencia=null;return;}
+      var h=splitCells(lines[j]).map(function(c){return c.trim();}); j++;
+      var rr=[];
+      while(j<lines.length && lines[j].trim() && !lines[j].toUpperCase().startsWith('HOJA')){
+        var cc=splitCells(lines[j]).map(function(c){return c.trim();});
+        var k0=(cc[0]||'').toUpperCase();
+        var row={}; h.forEach(function(k,idx){row[k]=cc[idx]||'';});
+        rr.push(row);
+        // el pivot VIGENTE tiene 3 filas (vacío/NO/SI) + "Suma total" → cortar tras la suma
+        if(k0.indexOf('SUMA')>=0) break;
+        j++;
+      }
+      out.vigencia={headers:h,rows:rr};
+    })();
+    // ── TD COMPLETA DE ADENDAS (26 columnas, arranca ~fila 673) — header inicia con "SAP;UGL;PRESTADOR;INGRESO"
+    // OJO: las celdas de observaciones traen saltos de línea CRUDOS (sin comillas), por eso una fila lógica
+    // puede ocupar varias líneas físicas. Reensamblamos: si una línea no arranca con SAP numérico, es
+    // continuación de la última celda de la fila anterior.
+    (function(){
+      var j=0, hi=-1;
+      for(j=0;j<lines.length;j++){
+        if(/^\s*SAP\s*;\s*UGL\s*;\s*PRESTADOR\s*;\s*INGRESO/i.test(lines[j])){ hi=j; break; }
+      }
+      if(hi<0){ out.tdAdendas=null; return; }
+      var h=lines[hi].split(';').map(function(c){return c.trim();});
+      var ncol=h.length;
+      var rr=[];
+      // Parser CSV que respeta comillas: una celda entre comillas puede contener ';' y saltos
+      // de línea sin que cuenten como separador. Esto evita que observaciones multilínea
+      // (ej. COSEME con texto entrecomillado en OBSERVACIONES UGTO A) corran las columnas.
+      // 1) Reensamblar el texto crudo de la TD (desde hi+1 hasta el próximo bloque HOJA)
+      var rawLines=[];
+      for(var k=hi+1;k<lines.length;k++){
+        if(lines[k].toUpperCase().startsWith('HOJA')) break;
+        rawLines.push(lines[k]);
+      }
+      var blob=rawLines.join('\n');
+      // 2) Tokenizar respetando comillas dobles
+      function parseCSVrows(text){
+        var rows=[], field='', row=[], inQ=false;
+        for(var p=0;p<text.length;p++){
+          var ch=text[p], nx=text[p+1];
+          if(inQ){
+            if(ch==='"'){ if(nx==='"'){ field+='"'; p++; } else { inQ=false; } }
+            else { field+=ch; }
+          } else {
+            if(ch==='"'){ inQ=true; }
+            else if(ch===';'){ row.push(field); field=''; }
+            else if(ch==='\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+            else if(ch==='\r'){ /* ignorar */ }
+            else { field+=ch; }
+          }
+        }
+        if(field.length||row.length){ row.push(field); rows.push(row); }
+        return rows;
+      }
+      var parsed=parseCSVrows(blob);
+      // 3) Reensamblar filas lógicas: una fila válida arranca con SAP numérico.
+      //    Si una fila parseada no arranca con número, es continuación de la anterior
+      //    (caso raro de saltos fuera de comillas) → se pega a la última celda.
+      var cur=null;
+      function pushCur(){
+        if(!cur) return;
+        var row={}; for(var x=0;x<ncol;x++){ row[h[x]]=(cur[x]!==undefined?String(cur[x]).trim():''); }
+        rr.push(row); cur=null;
+      }
+      for(var i2=0;i2<parsed.length;i2++){
+        var cells=parsed[i2];
+        var first=(cells[0]!==undefined?String(cells[0]).trim():'');
+        if(/^[0-9]+$/.test(first)){
+          pushCur();
+          cur=cells.slice();
+        } else if(cur){
+          // continuación residual (sin comillas): pegar a última celda
+          if(cells.length){
+            cur[cur.length-1]=(cur[cur.length-1]||'')+'\n'+cells[0];
+            for(var z=1;z<cells.length;z++) cur.push(cells[z]);
+          }
+        }
+      }
+      pushCur();
+      out.tdAdendas={headers:h, rows:rr};
+    })();
+    return out;
+  }
+
+function up(s){return String(s==null?"":s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim().replace(/\s+/g," ");}
+function tdRows(){return window.__tdAdendas||[];}
+
+// ── Auditoría de conteos: por qué la tabla (filas) difiere del universo (SAP+UGL únicos) ──
+window.__auditarConteos = function(){
+  var rows = (window.__tdAdendas||[]);
+  function up2(s){return String(s||'').toUpperCase().trim();}
+  function isRealA(r){var p=up2(G(r,"PRESTADOR"));return !!p&&p!=="NO ENCONTRADO"&&p.indexOf("SUMA")<0;}
+  var reales = rows.filter(isRealA);
+  var porSapUgl={}, porSap={}, dupSapUgl=[];
+  reales.forEach(function(r){
+    var sap=up2(G(r,"SAP")), ugl=up2(G(r,"UGL"));
+    var kSU=sap+'||'+ugl;
+    if(!porSapUgl[kSU]) porSapUgl[kSU]=[];
+    porSapUgl[kSU].push(r);
+    porSap[sap]=(porSap[sap]||0)+1;
+  });
+  var nSapUglUnicos=Object.keys(porSapUgl).length;
+  var nSapUnicos=Object.keys(porSap).length;
+  Object.keys(porSapUgl).forEach(function(k){
+    if(porSapUgl[k].length>1){
+      var ej=porSapUgl[k][0];
+      dupSapUgl.push({sap:up2(G(ej,"SAP")), ugl:up2(G(ej,"UGL")), prest:G(ej,"PRESTADOR"), veces:porSapUgl[k].length});
+    }
+  });
+  dupSapUgl.sort(function(a,b){return b.veces-a.veces;});
+  var totalFilasDup = dupSapUgl.reduce(function(a,b){return a+(b.veces-1);},0);
+  var porUGL={};
+  reales.forEach(function(r){
+    var ugl=G(r,"UGL")||'(sin UGL)';
+    if(!porUGL[ugl]) porUGL[ugl]={filas:0, sapugl:{}};
+    porUGL[ugl].filas++;
+    porUGL[ugl].sapugl[up2(G(r,"SAP"))+'||'+up2(ugl)]=1;
+  });
+  var out='=== AUDITORIA DE CONTEOS ===\n\n';
+  out+='Filas reales en hoja ADENDAS (tabla "casos del filtro"): '+reales.length+'\n';
+  out+='Combinaciones SAP+UGL unicas: '+nSapUglUnicos+'\n';
+  out+='SAPs unicos (prestadores distintos): '+nSapUnicos+'\n';
+  out+='Filas de mas por duplicacion SAP+UGL: '+totalFilasDup+'\n';
+  out+='Diferencia tabla vs SAP+UGL unicos: '+(reales.length-nSapUglUnicos)+'\n\n';
+  out+='=== '+dupSapUgl.length+' combinaciones SAP+UGL en MAS DE UNA FILA ===\n';
+  dupSapUgl.slice(0,80).forEach(function(d){ out+='  ['+d.veces+'x] SAP '+d.sap+' | '+d.ugl+' | '+d.prest+'\n'; });
+  if(dupSapUgl.length>80) out+='  ... y '+(dupSapUgl.length-80)+' mas\n';
+  out+='\n=== CONTEO POR UGL (filas | SAP+UGL unicos) ===\n';
+  Object.keys(porUGL).sort().forEach(function(u){
+    var f=porUGL[u].filas, su=Object.keys(porUGL[u].sapugl).length;
+    out+='  '+u+': '+f+' filas'+(f!==su?'  /!\\ '+su+' unicos (dif '+(f-su)+')':'  ok')+'\n';
+  });
+  console.log(out);
+  return {filas:reales.length, sapUglUnicos:nSapUglUnicos, sapUnicos:nSapUnicos, duplicados:dupSapUgl, porUGL:porUGL, texto:out};
+};
+function G(r,name){
+  if(r[name]!==undefined) return r[name];
+  var target=up(name);
+  for(var k in r){ if(r.hasOwnProperty(k) && up(k)===target) return r[k]; }
+  return "";
+}
+
+// Lectura robusta de la columna de notificación inicial a la UGL (tolera variaciones de guion/espacio)
+function notifMailEstado(r){
+  // buscar cualquier columna que contenga NOTIFICACION y MAIL
+  for(var k in r){
+    if(!r.hasOwnProperty(k))continue;
+    var ku=up(k);
+    if(ku.indexOf("MAIL COMUNICACION")>=0 || (ku.indexOf("NOTIFIC")>=0 && ku.indexOf("MAIL")>=0)){
+      var v=up(r[k]);
+      if(v.indexOf("ENVIAD")>=0) return "ENVIADO";
+      if(v.indexOf("PEND")>=0) return "PENDIENTE";
+      if(v) return "OTRO";
+      return "";
+    }
+  }
+  return "";
+}
+function tieneM69(r){
+  var v=up(G(r,"Prest Internacion"));
+  if(!v) return false;
+  if(v==="SI"||v==="SÍ"||v==="1"||v==="X"||v==="TRUE"||v==="VERDADERO"||v==="INTERNACION"||v==="69"||v.indexOf("INTERN")>=0||v.indexOf("M69")>=0||v.indexOf("69")>=0) return true;
+  if(v==="NO"||v==="0"||v==="FALSE"||v==="AMBULATORIO") return false;
+  return !!v && v!=="-";
+}
+// Cápita M69 del prestador (por SAP) — inyectada desde el Excel mensual
+function capitaM69(r){
+  try{
+    var sap=String(G(r,"SAP")||"").trim();
+    if(sap && window.__CAPITA_M69 && window.__CAPITA_M69[sap]!=null) return window.__CAPITA_M69[sap];
+  }catch(e){}
+  return null;
+}
+function cumple375(r){
+  // Valores reales en 'RESULTADO S/ GRUPO NOTA': usan ✔ para cumplido y "falta:" para faltantes.
+  // Ej: "✔ Oftalmo" (pleno) · "✔ Espe | Img falta: 23" (parcial) · "Espe falta: 69..." (ninguno) · "NINGÚN MÓDULO HABILITADO"
+  var raw=String(G(r,"RESULTADO S/ GRUPO NOTA")||"");
+  var v=raw.trim();
+  if(!v) return null;
+  var U=up(v);
+  if(U.indexOf("NINGUN MODULO")>=0 || U.indexOf("NO DECLARAD")>=0) return "NINGUNO";
+  var tieneOK = /[\u2713\u2714\u2705\u2611]/.test(v) || U.indexOf("ACREDITA DOC")>=0 || U.indexOf("APTO")>=0;
+  var tieneFalta = U.indexOf("FALTA")>=0;
+  if(tieneOK && !tieneFalta) return "PLENO";
+  if(tieneOK && tieneFalta) return "PARCIAL";
+  if(!tieneOK && tieneFalta) return "NINGUNO";
+  return null;
+}
+window.__ceCumple375=cumple375;
+function vigente(r){
+  var v=up(G(r,"VIGENTE"));
+  if(v==="SI"||v==="SÍ"||v==="VIGENTE") return "SI";
+  if(v==="NO"||v==="NO VIGENTE") return "NO";
+  return "";
+}
+function hasEE(r){var e=String(G(r,"EXPEDIENTE")).trim();return !!e&&up(e).indexOf("SIN EXP")<0&&up(e).indexOf("SIN EE")<0&&e.length>4;}
+
+var UGL_ORDER={"TUCUMAN":1,"CORRIENTES":2,"CORDOBA":3,"MENDOZA":4,"BAHIA BLANCA":5,"CAPITAL FEDERAL":6,"LA PLATA":7,"SAN MARTIN":8,"ROSARIO":9,"LANUS":10,"MAR DEL PLATA":11,"SALTA":12,"CHACO":13,"ENTRE RIOS":14,"SANTA FE":15,"NEUQUEN":16,"CHUBUT":17,"MISIONES":18,"SANTIAGO DEL ESTERO":19,"LA PAMPA":20,"SAN JUAN":21,"JUJUY":22,"FORMOSA":23,"CATAMARCA":24,"LA RIOJA":25,"SAN LUIS":26,"RIO NEGRO":27,"MORON":29,"AZUL":30,"JUNIN":31,"LUJAN":32,"TIERRA DEL FUEGO":33,"CONCORDIA":34,"SAN JUSTO":35,"RIO CUARTO":36,"QUILMES":37,"CHIVILCOY":38};
+function uglNum(u){var k=up(u);return UGL_ORDER[k]!==undefined?UGL_ORDER[k]:999;}
+window.__UGL_ORDER=UGL_ORDER;
+// Registro FANTASMA: maniquí cargado solo para probar chips de Intervención-C, SIN datos reales
+// (sin prestador y sin SAP, pero con chip cargado). Se excluye de TODO el visor.
+function esFantasma(r){
+  var p=up(G(r,"PRESTADOR")), sap=String(G(r,"SAP")||"").trim();
+  var chip=up(G(r,"INTERVENCION UGTO -C")||G(r,"INTERVENCION UGTO - C")||"");
+  return (!p||p==="-") && !sap && !!chip && chip!=="-";
+}
+function isReal(r){if(esFantasma(r))return false;var p=up(G(r,"PRESTADOR"));return !!p&&p!=="NO ENCONTRADO"&&p.indexOf("SUMA")<0;}
+
+window.__tiempoProceso=function(r){
+  function parseFecha(s){
+    s=String(s||"").trim();
+    var m=s.match(/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?$/);
+    if(!m) return null;
+    var d=parseInt(m[1],10), mo=parseInt(m[2],10)-1, y=m[3]?parseInt(m[3],10):2026;
+    if(y<100) y+=2000;
+    if(d<1||d>31||mo<0||mo>11) return null;
+    return new Date(y,mo,d);
+  }
+  var fIng=parseFecha(G(r,"INGRESO"));
+  if(!fIng) return {has:false, cell:'<span style="color:#cbd5e1;font-size:11px;">—</span>'};
+  var fCie=parseFecha(G(r,"CIERRE"));
+  var cerrado=!!fCie;
+  var fin=fCie||new Date();
+  // si la fecha de fin quedó antes que ingreso (cruce de año), sumar un año al fin
+  if(fin<fIng){ fin=new Date(fin.getFullYear()+1, fin.getMonth(), fin.getDate()); }
+  var dias=Math.max(0, Math.round((fin-fIng)/86400000));
+  var col, lbl;
+  if(dias<=30){ col="#16a34a"; lbl="≤ 1 mes"; }
+  else if(dias<=90){ col="#d97706"; lbl="2–3 meses"; }
+  else { col="#dc2626"; lbl="+ 3 meses"; }
+  var sufijo=cerrado?"":" (en curso)";
+  var cell='<span title="'+(cerrado?"Proceso cerrado":"Proceso abierto")+' · '+dias+' días · '+lbl+sufijo+'"'
+    +' style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;background:'+col+'1a;color:'+col+';font-size:10px;font-weight:900;white-space:nowrap;">'
+    +'<span style="width:7px;height:7px;border-radius:99px;background:'+col+';display:inline-block;"></span>'
+    +dias+'d</span>';
+  return {has:true, dias:dias, cerrado:cerrado, color:col, lbl:lbl, cell:cell};
+};
+
+  var FIRMA_ETAPAS=[
+    {key:'EN UTM',          lbl:'En UTM',            desc:'PV enviada · en UTM (arranque)',     col:'#7c3aed', match:function(v){return v.indexOf('DERIVADO A UTM')>=0||v.indexOf('DERIVAR A UTM')>=0;}},
+    {key:'ENVIADA A GANPR', lbl:'Enviada a GANPR',   desc:'Enviada a GANPR',                     col:'#a855f7', match:function(v){return v.indexOf('GANPR')>=0;}},
+    {key:'RECIBE VB ADENDA',lbl:'Recibe VB adenda',  desc:'Recibe VB adenda',                    col:'#7dd3fc', match:function(v){return v.indexOf('RECIBE VB')>=0||(v.indexOf('VB')>=0&&v.indexOf('ADENDA')>=0);}},
+    {key:'NOTIFICADA A UGL',lbl:'Notificada a UGL',  desc:'Notificada a UGL',                    col:'#0891b2', match:function(v){return v.indexOf('NOTIFICAD')>=0&&v.indexOf('UGL')>=0;}},
+    {key:'RECIBE ADENDA',   lbl:'Recibe adenda',     desc:'Recibe adenda (vuelve a UGTO)',       col:'#0d9488', match:function(v){return v.indexOf('RECIBE ADENDA')>=0||v.indexOf('RECIBE UGTO')>=0;}},
+    {key:'ENVIADA A GPM',   lbl:'Enviada a GPM',     desc:'Enviada a GPM',                       col:'#84cc16', match:function(v){return v.indexOf('ENVIADA A GPM')>=0||(v.indexOf('GPM')>=0&&v.indexOf('CAPITA')<0&&v.indexOf('CÁPITA')<0);}},
+    {key:'ENVIADA A ULYT',  lbl:'Enviada a ULYT',    desc:'Enviada a ULYT',                      col:'#6366f1', match:function(v){return v.indexOf('ULYT')>=0||v.indexOf('ENVIADA A CE')>=0;}},
+    {key:'ENVIADA A DE',    lbl:'Enviada a DE',      desc:'Enviada a Dirección Ejecutiva',       col:'#d97706', match:function(v){return v.indexOf('ENVIADA A DE')>=0||v.indexOf('SDE')>=0||v.indexOf('/DE')>=0||v.indexOf('DIRECCION')>=0;}},
+    {key:'ADENDA FIRMADA',  lbl:'Adenda firmada',    desc:'Adenda firmada (Dirección Ejecutiva)',col:'#15803d', match:function(v){return v.indexOf('ADENDA FIRMADA')>=0||v.indexOf('FIRMADA')>=0;}},
+    {key:'CAPITAS GPM',     lbl:'Cápitas GPM',       desc:'Cápitas GPM',                         col:'#65a30d', match:function(v){return v.indexOf('CAPITAS')>=0||v.indexOf('CÁPITAS')>=0;}},
+    {key:'POPP CARGA ADENDA',lbl:'POPP carga adenda',desc:'POPP carga adenda',                  col:'#0d6e78', match:function(v){return v.indexOf('POPP CARGA')>=0||(v.indexOf('POPP')>=0&&v.indexOf('CARGA')>=0);}},
+    {key:'CIERRE · AVISO UGL',lbl:'Cierre · aviso UGL',desc:'Cierre · aviso UGL',               col:'#16a34a', match:function(v){return v.indexOf('AVISO UGL')>=0||v.indexOf('CIERRE')>=0;}},
+  ];
+  // Rama negativa (no es avance: es un desenlace que sale del paso de decisión GANPR)
+  function esDevolucionNegativa(r){ var v=up(G(r,'INTERVENCION UGTO -C')||G(r,'INTERVENCION UGTO - C')||''); return v.indexOf('DEVOLUCION NEGATIVA')>=0||v.indexOf('DEVOLUCIÓN NEGATIVA')>=0; }
+  function etapaFirma(r){
+    var vC=up(G(r,'INTERVENCION UGTO -C')||G(r,'INTERVENCION UGTO - C')||'');
+    // de la etapa más avanzada hacia atrás (índice 1 en adelante) — por chip
+    for(var i=FIRMA_ETAPAS.length-1;i>=1;i--){ if(FIRMA_ETAPAS[i].match(vC)) return i; }
+    // RESPALDO: si el chip está vacío/pisado, inferir por ÚLTIMO ESTADO (GESTION ADENDA)
+    var uE=up(G(r,'ULTIMO ESTADO')||'');
+    if(uE){
+      if(uE.indexOf('ADENDA FINALIZADA')>=0||uE.indexOf('AVISO UGL')>=0) return 11;
+      if(uE.indexOf('ADENDA EN SII')>=0||(uE.indexOf('POPP')>=0&&uE.indexOf('CARGA')>=0)) return 10;
+      if(uE.indexOf('ASIGNACION DE CAPITA')>=0||uE.indexOf('CAPITA')>=0) return 9;
+      if(uE.indexOf('ADENDA FIRMADA')>=0) return 8;
+      if(uE.indexOf('ADENDA EN SDE')>=0||uE.indexOf('/DE')>=0||uE.indexOf('EN DE')>=0) return 7;
+      if(uE.indexOf('ADENDA EN ULYT')>=0) return 6;
+      if(uE.indexOf('ADENDA EN GPM')>=0) return 5;
+      if(uE.indexOf('ADENDA EN UGTO')>=0) return 4;
+      if(uE.indexOf('ADENDA EN UGL')>=0) return 3;
+      if(uE.indexOf('ADENDA CON VB')>=0) return 2;
+      if(uE.indexOf('ADENDA EN GANPR')>=0) return 1;
+    }
+    // etapa 0 (En UTM): SOLO cuando el ÚLTIMO ESTADO es "EN UTM" (ahí arranca el caminito).
+    // PV EN UTM o el chip "derivado a UTM" NO bastan: eso es pre-circuito (KPI aparte).
+    if(uE.indexOf('EN UTM')>=0) return 0;
+    return -1;
+  }
+
+/* ══ MOTOR DE RECONSIDERACIÓN DI-2026-4 (UTM) — copiado del visor estable ══ */
+var RE375_NUEVA = {
+  imagenes:       { label:"Imágenes",       universo:["2","3","22","23","24"],            modo:"alguno" },
+  oftalmologia:   { label:"Oftalmología",   universo:["36","37","38"],                    modo:"todos" },
+  especialidades: { label:"Especialidades", obligatorio:["69"], universo:["543","544","545","546","551","552"], modo:"obligatorio_mas_alguno" }
+};
+function modulosPresentes(r){
+  var set={};
+  var det=String(G(r,"DETALLE MODULOS NORMATIVA 375")||"");
+  var resu=String(G(r,"RESULTADO S/ GRUPO NOTA")||"");
+  var blob=det+" || "+resu;
+  var reTiene=/(?:tiene|habilitad[oa]s?)\s*:?\s*([0-9,\s]+)/gi, m;
+  while((m=reTiene.exec(blob))!==null){
+    m[1].split(/[,\s]+/).forEach(function(c){c=c.trim();if(/^\d{1,4}$/.test(c))set[c]=1;});
+  }
+  return set;
+}
+function modulosFaltantes(r){
+  var set={};
+  var blob=String(G(r,"DETALLE MODULOS NORMATIVA 375")||"")+" || "+String(G(r,"RESULTADO S/ GRUPO NOTA")||"");
+  var reFalta=/falta[n]?\s*:?\s*([0-9,\s]+)/gi, m;
+  while((m=reFalta.exec(blob))!==null){
+    m[1].split(/[,\s]+/).forEach(function(c){c=c.trim();if(/^\d{1,4}$/.test(c))set[c]=1;});
+  }
+  return set;
+}
+function evalGrupoNuevo(grupoKey, present){
+  var g=RE375_NUEVA[grupoKey]; if(!g) return null;
+  function has(c){return !!present[c];}
+  // Regla VIEJA (RESOL-375 original): cumplía si tenía TODOS los módulos del grupo.
+  // Universo completo viejo por grupo:
+  var universoViejo={
+    imagenes:["2","3","22","23","24"],
+    oftalmologia:["36","37","38"],
+    especialidades:["69","543","544","545","546","551","552"]
+  }[grupoKey]||[];
+  var cumpliaVieja = universoViejo.length>0 && universoViejo.every(has);
+  if(g.modo==="alguno"){
+    var t=g.universo.filter(has);
+    return {cumple:t.length>=1, cumpliaVieja:cumpliaVieja, tiene:t, label:g.label, regla:"≥1 módulo de imágenes"};
+  }
+  if(g.modo==="todos"){
+    var t2=g.universo.filter(has), falt=g.universo.filter(function(c){return !has(c);});
+    return {cumple:falt.length===0, cumpliaVieja:cumpliaVieja, tiene:t2, falta:falt, label:g.label, regla:"los 3 módulos (36,37,38)"};
+  }
+  if(g.modo==="obligatorio_mas_alguno"){
+    var tieneObl=g.obligatorio.every(has);
+    var esp=g.universo.filter(has);
+    return {cumple:tieneObl && esp.length>=1, cumpliaVieja:cumpliaVieja, tiene:g.obligatorio.filter(has).concat(esp), tieneObl:tieneObl, especialidades:esp, label:g.label, regla:"69 + ≥1 especialidad"};
+  }
+  return null;
+}
+function reconsiderar375(r){
+  var present=modulosPresentes(r);
+  var grupoNota=up(G(r,"GRUPO NOTA"));
+  var declarados=[];
+  if(grupoNota.indexOf("IMAG")>=0||grupoNota.indexOf("IMÁG")>=0) declarados.push("imagenes");
+  if(grupoNota.indexOf("OFTALMO")>=0) declarados.push("oftalmologia");
+  if(grupoNota.indexOf("ESPE")>=0) declarados.push("especialidades");
+  if(!declarados.length) declarados=["imagenes","oftalmologia","especialidades"];
+  var porGrupo=declarados.map(function(k){return evalGrupoNuevo(k,present);}).filter(Boolean);
+  // ¿Ya cumplía ALGÚN grupo bajo la regla VIEJA? → su rechazo NO fue modular.
+  var yaCumpliaAlgunoVieja=porGrupo.some(function(g){return g.cumpliaVieja;});
+  // RECALIFICA solo por grupos que: cumplen la NUEVA regla PERO NO cumplían la VIEJA (recuperación modular real).
+  var recalifican=porGrupo.filter(function(g){return g.cumple && !g.cumpliaVieja;});
+  var sinDatoModular=(Object.keys(present).length===0 && Object.keys(modulosFaltantes(r)).length===0);
+  var veredicto, via=null, explicacion, derivacion=null;
+  // CRUCE MODULAR PURO: 1) fallaba vieja y pasa nueva → RECALIFICA · 2) cumplía vieja → REVISIÓN (rechazo documental/otro)
+  // 3) sin datos modulares → REVISIÓN · 4) no cumple la nueva → SIN_CUMPLIR (sin importar la observación del rechazo).
+  if(recalifican.length){
+    veredicto="RECALIFICA";
+    via=recalifican[0];
+    if(via.label==="Imágenes") explicacion="Recalifica por Imágenes: bajo la regla anterior le faltaban módulos del grupo, pero la nueva norma exige solo uno y posee el "+via.tiene.join(", ")+".";
+    else if(via.label==="Especialidades") explicacion="Recalifica por Especialidades: la nueva norma exige internación (69) + al menos una especialidad, y acredita "+(via.especialidades||[]).join(", ")+".";
+    else explicacion="Recalifica por Oftalmología: acredita los 3 módulos "+via.tiene.join(", ")+".";
+    var vig=vigente(r);
+    if(vig==="SI"){
+      derivacion="Apto para derivar PV a UTM (gestión de firma)";
+    } else if(vig==="NO"){
+      derivacion="⚠ Contrato madre NO vigente · regularizar firma de contrato primero; luego derivar PV a UTM";
+    } else {
+      derivacion="Verificar vigencia contractual antes de derivar a UTM";
+    }
+  } else if(yaCumpliaAlgunoVieja){
+    // Modular OK desde siempre → el rechazo fue documental/otro: eso es lo que hay que rever.
+    veredicto="REVISION";
+    explicacion="Requiere revisión: la parte modular ya estaba calificada bajo la norma anterior, por lo que el rechazo fue de otro origen (documental, habilitación, quirófano). Corresponde rever ese motivo, no lo modular.";
+    derivacion="Rever motivo del rechazo (documental, no modular)";
+  } else if(sinDatoModular){
+    veredicto="REVISION";
+    explicacion="Requiere revisión: sin datos modulares registrados para hacer el cruce normativo.";
+    derivacion="Completar datos modulares y reevaluar";
+  } else {
+    veredicto="SIN_CUMPLIR";
+    var ofta=porGrupo.filter(function(g){return g.label==="Oftalmología";})[0];
+    if(ofta && ofta.falta && ofta.falta.length) explicacion="No recalifica: continúa sin acreditar módulo(s) "+ofta.falta.join(", ")+" de Oftalmología (la nueva norma mantiene los 3 obligatorios).";
+    else explicacion="No recalifica: no cumplía la regla anterior y tampoco cumple la nueva regla modular.";
+  }
+  return {veredicto:veredicto, via:via, explicacion:explicacion, derivacion:derivacion, contratoVigente:vigente(r), porGrupo:porGrupo, presentes:Object.keys(present), recalificaPorGrupos:recalifican.map(function(g){return g.label;})};
+}
+function esReconsiderable(r){
+  // Universo EXACTO del mundo rechazado (mismos estados que el tablero clasifica como 'negativo'):
+  // RECHAZADO UGTO (194) + RECHAZADO POPP (90) + DEVOLVER EE (63) + RECHAZADO (1) = 348
+  var ue=up(G(r,"ULTIMO ESTADO")||"");
+  return ue==="RECHAZADO UGTO" || ue==="RECHAZADO POPP" || ue==="DEVOLVER EE" || ue==="RECHAZADO" || ue==="ADENDA NEGATIVA";
+}
+window.__reconsiderar375=reconsiderar375;
+window.__esReconsiderable=esReconsiderable;
+
+/* ====== APP DE CONSULTA ====== */
+
+"use strict";
+var DRIVE_URL = "https://script.google.com/macros/s/AKfycbwWckLdy2KrNqyhl1pWaduQt-NFIvOxNn4KokbqnETDSNJotArehTShq5waHw16vEZdww/exec";
+var DATA = [];
+var UNIVERSO_OFICIAL = 0; // "Suma total" del pivot Prestadores (sap-ugl) — el 1.021 que se reporta
+var BUSCAR_RES = [];      // resultados vigentes del filtro de Buscar (para export)
+var FICHA_IDX = -1;       // prestador abierto en la ficha (para WhatsApp)
+var VER_TODOS = false;    // listado completo sin filtros (botón "Ver todos")
+
+/* ══ CÁPITA DE INTERNACIÓN M69 — data planchada del visor principal (actualizar junto con él) ══ */
+window.__CAPITA_M69={"76583":6193,"102014":2426,"77161":21387,"74957":7392,"35928":19932,"35863":15712,"36524":18556,"35813":20099,"35838":0,"71499":2955,"53735":4718,"71378":3102,"53736":3170,"100644":2035,"71380":6857,"71544":8671,"71379":2914,"71872":1933,"53737":4411,"53738":11558,"53744":3793,"99767":1595,"71983":1903,"32422":10,"53774":43361,"62524":4860,"31792":18688,"32410":9454,"87622":9332,"35782":7634,"73494":5353,"73616":7508,"99683":41449,"31723":11721,"62578":5141,"35987":9585,"77944":12405,"31919":11609,"69815":11654,"73460":4308,"40929":6639,"73978":10869,"73321":5260,"73980":10012,"73324":2701,"73323":3305,"40905":1259,"28519":8157,"40912":2434,"73495":3083,"74381":2066,"73979":5982,"99522":1044,"73496":3813,"73497":3988,"117163":1985,"73960":34985,"31877":7742,"99774":1190,"104950":191,"101337":641,"73965":6341,"96047":4763,"72488":6975,"32179":2989,"66357":4385,"40105":6113,"40173":4441,"40911":2905,"69814":10763,"31724":36469,"32280":10118,"74140":6830,"74144":4347,"36601":7806,"73731":3600,"40908":5128,"73959":323,"73744":854,"67723":5296,"70663":4938,"41002":4752,"69188":44876,"32993":3223,"71063":12410,"70801":31991,"65234":54002,"70791":7212,"76570":1492,"74811":11926,"69449":14551,"40064":12950,"40994":14439,"100812":7797,"36589":8454,"50572":1,"74604":14675,"62818":3269,"1117":40553,"1115":37264,"75020":0,"69896":6951,"68127":3140,"41539":0,"68220":4976,"2355":2099,"67397":80210,"85356":33275,"2143":33542,"66895":26982,"113846":17229,"2099":15991,"58317":22406,"87460":3,"107920":5975,"109553":7010,"51454":7018,"71155":0,"36346":92,"33395":12061,"41043":5773,"41039":3264,"71547":7376,"71542":2600,"94920":0,"35801":16055,"36062":2669,"101613":61106,"32890":44509,"35756":17397,"35769":8655,"70893":2411,"70829":3247,"41023":16654,"70827":10453,"2108":3265,"87680":18237,"2298":5994,"111975":8655,"110843":8270,"2325":21257,"70681":29956,"2034":4996,"2486":13660,"2490":5729,"41442":5861,"117932":1726,"60836":6986,"73106":2161,"68311":31509,"35772":11784,"36217":4725,"75120":19603,"75015":2923,"74996":2634,"68570":6149,"98767":11456,"64712":1663,"65396":8182,"50351":17098,"41525":8217,"64972":4062,"86101":5333,"68564":4348,"68784":6145,"68386":973,"68678":810,"25801":1463,"71621":10711,"71620":1095,"103193":4426,"68560":3379,"68578":647,"68580":670,"33519":7404,"68388":5693,"40813":18201,"68381":8326,"71619":3122,"64525":2148,"71878":1443,"68664":1232,"66958":4861,"100639":44286,"35773":12677,"76077":8262,"41246":1086,"68566":281,"68940":3489,"68028":3441,"68026":3733,"72479":1124,"72026":8166,"72818":4986,"89923":2998,"83243":19097,"79900":4278,"69450":9027,"77169":2748,"75922":3325,"103724":8923,"35798":6033,"36008":4397,"69389":1764,"69512":1,"35757":10064,"35891":7812,"35975":9697,"35922":6280,"70608":5105,"69699":7811,"66863":1134,"98485":7913,"36114":1292,"57173":85,"98496":20228,"40137":9306,"111699":6450,"71200":11502,"61610":14651,"88817":17502,"104092":23493,"66580":11709,"64756":5989,"66535":42867,"2357":8348,"116808":33848,"66607":20566,"36578":2125,"36413":4748,"36575":3545,"41363":6946,"54582":4600,"35760":2127,"69488":19171,"2629":1499,"40979":11298,"60799":10129,"1156":16225,"96646":9701,"36293":17828,"33373":3612,"65504":5566,"2065":28920,"86778":12742,"67227":50038,"2120":12131,"110135":1388,"118000":5457,"2047":39683,"41698":2317,"40049":10971,"40893":2130,"40896":3143,"40894":6772,"66194":17773,"40895":9573,"63869":16000,"87331":23869,"116917":10572,"2494":11062,"2058":17803,"2378":30269,"108307":9934,"68702":1333,"71437":8299,"40803":2318,"100837":1539,"2610":6345,"33428":3772,"50596":1266,"2365":8940,"35761":4391,"69768":2495,"41400":3483,"36591":9787,"41497":1422,"28505":6599,"35677":20324,"104397":116776,"34375":1,"104033":2263,"106684":831,"108785":88,"118288":12911,"35955":0}; window.__CAPITA_MES="mayo 2026";
+var D_ALL = null;  // todas las hojas del parser (ultimoEstado, mesa, mensaje)
+
+/* ════ CARGA ════ */
+function cargarDatos(isManual){
+  var sb=document.getElementById("syncBtn");
+  if(isManual&&sb) sb.classList.add("spinning");
+  if(!isManual){
+    var sp=document.getElementById("splash"); sp.classList.remove("hide");
+    document.getElementById("splashRing").style.display="";
+    document.getElementById("splashErr").style.display="none";
+    document.getElementById("splashRetry").style.display="none";
+  }
+  fetch(DRIVE_URL,{redirect:"follow"})
+    .then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.text();})
+    .then(function(text){
+      if(text.indexOf("ERROR:")===0)throw new Error(text);
+      var d=parseCSV(text);
+      D_ALL=d;
+      DATA=(d.tdAdendas&&d.tdAdendas.rows)?d.tdAdendas.rows:[];
+      DATA=DATA.filter(function(r){return isReal(r);});
+      window.__tdAdendas=DATA;
+      // Universo OFICIAL = "Suma total" del pivot Prestadores (sap-ugl) — igual al visor
+      UNIVERSO_OFICIAL=0;
+      if(d.ultimoEstado){
+        var _sr=d.ultimoEstado.rows.find(function(r){return (r["ULTIMO ESTADO"]||"").toLowerCase().includes("suma");});
+        if(_sr) UNIVERSO_OFICIAL=parseInt(_sr["Prestadores (sap-ugl)"])||0;
+      }
+      fillFilterSelects(); renderBuscar(); buildStats(); buildFirma(); buildCom();
+      document.getElementById("splash").classList.add("hide");
+    })
+    .catch(function(err){
+      if(isManual){alert("No se pudo actualizar:\n"+err.message);}
+      else{
+        document.getElementById("splashRing").style.display="none";
+        var e=document.getElementById("splashErr");e.style.display="";e.textContent="No se pudo cargar: "+err.message;
+        document.getElementById("splashRetry").style.display="";
+      }
+      console.error(err);
+    })
+    .finally(function(){if(sb)setTimeout(function(){sb.classList.remove("spinning");},700);});
+}
+
+/* ════ TABS ════ */
+function setTab(t){
+  ["stats","buscar","firma","com"].forEach(function(x){
+    document.getElementById("tab"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
+    document.getElementById("view"+x.charAt(0).toUpperCase()+x.slice(1)).classList.toggle("active",x===t);
+  });
+}
+
+function estadoFirma(r){
+  var i=etapaFirma(r);
+  if(i>=0&&i<FIRMA_ETAPAS.length){var e=FIRMA_ETAPAS[i];return {idx:i,lbl:e.lbl,desc:e.desc,col:e.col};}
+  var ue=String(G(r,"ULTIMO ESTADO")||"").trim();
+  if(ue) return {idx:-1,lbl:ue,desc:"Fuera del circuito de firma",col:"#64748b"};
+  return {idx:-1,lbl:"Sin estado",desc:"",col:"#cbd5e1"};
+}
+function esc(s){return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function nfmt(n){return (n||0).toLocaleString("es-AR");}
+
+/* ════ BUSCAR — réplica de la lógica de filtros de la tabla de prestadores del visor ════ */
+var GRUPOS_FILTRO=[
+  {id:"ubic",   label:"Ubicación y estado",            icon:"📍", items:[{id:"fUgl",lbl:"UGL"},{id:"fEstado",lbl:"Último estado"},{id:"fTiempo",lbl:"Tiempo"},{id:"fM69",lbl:"Internación M69"},{id:"fEE",lbl:"Expediente (EE)"},{id:"fMsg",lbl:"Mensaje"}]},
+  {id:"eval",   label:"Evaluación 375",                icon:"📋", items:[{id:"fCumple",lbl:"Cumple 375"},{id:"fRecon",lbl:"Reconsideración DI-4"},{id:"fPopp",lbl:"Eval. POPP"},{id:"fGrupoNota",lbl:"Grupo nota"},{id:"fGrupoOK",lbl:"Grupo OK"},{id:"fViab",lbl:"Viabilizador"}]},
+  {id:"docctr", label:"Documentación y contrato",      icon:"📄", items:[{id:"fNotaPV",lbl:"NOTA / PV (UGTO)"},{id:"fPvUgl",lbl:"PV a UGL (GDE)"},{id:"fVig",lbl:"Contrato"}]},
+  {id:"notif",  label:"Notificación y respuesta UGL",  icon:"✉️", items:[{id:"fMail",lbl:"Notif. UGL"},{id:"fRespUGL",lbl:"Respondió la UGL"},{id:"fResuelto",lbl:"Estado de resolución"}]}
+];
+var grpOpen=null;
+function valF(id){var e=document.getElementById(id);return e?e.value:"";}
+function txtF(id){var e=document.getElementById(id);if(!e||!e.value)return "";return e.options[e.selectedIndex]?e.options[e.selectedIndex].text:e.value;}
+function grpActiveCount(g){return g.items.reduce(function(n,it){return n+(valF(it.id)?1:0);},0);}
+function buildGrpBar(){
+  var bar=document.getElementById("grpBar");if(!bar)return;
+  bar.innerHTML=GRUPOS_FILTRO.map(function(g){
+    var n=grpActiveCount(g), act=(grpOpen===g.id);
+    return '<button type="button" class="grp-btn'+(act?" act":"")+'" onclick="toggleGrp(\''+g.id+'\')">'+g.icon+' '+g.label+(n>0?' <span class="bdg">'+n+'</span>':'')+' <span class="car">'+(act?"▲":"▼")+'</span></button>';
+  }).join("");
+}
+function toggleGrp(id){
+  grpOpen=(grpOpen===id)?null:id;
+  renderGrpPanel(); buildGrpBar();
+}
+function renderGrpPanel(){
+  var panel=document.getElementById("grpPanel"), raw=document.getElementById("rawFilters");
+  if(!panel||!raw)return;
+  // devolver los selects reubicados a su contenedor oculto (IDs intactos, como el visor)
+  panel.querySelectorAll("[data-moved]").forEach(function(el){el.removeAttribute("data-moved");raw.appendChild(el);});
+  panel.innerHTML="";
+  if(!grpOpen){panel.style.display="none";return;}
+  var g=GRUPOS_FILTRO.find(function(x){return x.id===grpOpen;});
+  if(!g){panel.style.display="none";return;}
+  g.items.forEach(function(it){
+    var cell=document.createElement("div");cell.className="grp-cell";
+    var lbl=document.createElement("div");lbl.className="grp-lbl";lbl.textContent=it.lbl;
+    cell.appendChild(lbl);
+    var node=document.getElementById(it.id);
+    if(node){node.setAttribute("data-moved","1");cell.appendChild(node);}
+    panel.appendChild(cell);
+  });
+  panel.style.display="";
+}
+function renderTags(){
+  var box=document.getElementById("fTags");if(!box)return;
+  var chips=[];
+  GRUPOS_FILTRO.forEach(function(g){g.items.forEach(function(it){
+    if(valF(it.id)) chips.push(it);
+  });});
+  if(!chips.length){
+    box.innerHTML=VER_TODOS?'<span class="f-tag">📋 Listado completo <b onclick="cerrarVerTodos()">✕</b></span>':"";
+    return;
+  }
+  box.innerHTML=chips.map(function(it){
+    return '<span class="f-tag">'+esc(it.lbl+": "+txtF(it.id))+' <b onclick="clearF(\''+it.id+'\')">✕</b></span>';
+  }).join("")+'<span class="f-tag clr-all" onclick="clearAllF()">Limpiar todo</span>';
+}
+function clearF(id){var e=document.getElementById(id);if(e)e.value="";renderBuscar();}
+function clearAllF(){GRUPOS_FILTRO.forEach(function(g){g.items.forEach(function(it){var e=document.getElementById(it.id);if(e)e.value="";});});renderBuscar();}
+
+function fillFilterSelects(){
+  // misma lógica que fillSelectors del visor (conteos sobre filas reales crudas)
+  var ugls={},estados={},popps={},grupos={};
+  DATA.forEach(function(r){
+    var u=String(G(r,"UGL")).trim();if(u&&up(u).indexOf("SUMA")<0)ugls[u]=(ugls[u]||0)+1;
+    var e=String(G(r,"ULTIMO ESTADO")).trim();if(e&&up(e).indexOf("SUMA")<0&&up(e).indexOf("TOTAL")<0)estados[e]=(estados[e]||0)+1;
+    var p=String(G(r,"EVALUACION POPP")).trim();if(p&&up(p).indexOf("SUMA")<0&&up(p).indexOf("TOTAL")<0)popps[p]=(popps[p]||0)+1;
+    var g=String(G(r,"GRUPO NOTA")).trim();if(g&&up(g).indexOf("SUMA")<0&&up(g).indexOf("TOTAL")<0)grupos[g]=(grupos[g]||0)+1;
+  });
+  function fill(id,first,obj,sortUgl){
+    var sel=document.getElementById(id);if(!sel)return;var cur=sel.value;
+    var keys=Object.keys(obj);
+    keys.sort(sortUgl?function(a,b){var na=uglNum(a),nb=uglNum(b);if(na!==nb)return na-nb;return a.localeCompare(b,"es");}:function(a,b){return obj[b]-obj[a];});
+    sel.innerHTML='<option value="">'+first+'</option>'+keys.map(function(k){var pre=sortUgl&&uglNum(k)<999?uglNum(k)+". ":"";return '<option value="'+esc(k)+'">'+pre+esc(k)+" ("+obj[k]+")</option>";}).join("");
+    sel.value=cur;
+  }
+  fill("fUgl","UGL: Todas",ugls,true);
+  fill("fEstado","Estado: Todos",estados,false);
+  fill("fPopp","Eval. POPP: Toda",popps,false);
+  fill("fGrupoNota","Grupo nota: Todos",grupos,false);
+  // Grupo OK: detecta qué grupos califican de la columna GRUPO OK
+  (function(){
+    var sel=document.getElementById("fGrupoOK");if(!sel)return;var cur=sel.value;
+    var setG={};
+    DATA.forEach(function(r){
+      var g=String(G(r,"GRUPO OK")).trim();if(!g)return;
+      g.split(/\s*\+\s*/).forEach(function(p){p=p.trim();if(p)setG[p]=1;});
+    });
+    var orden=["Oftalmología","Especialidades","Imágenes"];
+    var keys=Object.keys(setG).sort(function(a,b){var ia=orden.indexOf(a),ib=orden.indexOf(b);return (ia<0?99:ia)-(ib<0?99:ib);});
+    sel.innerHTML='<option value="">Grupo OK: Todos</option>'+keys.map(function(k){return '<option value="'+esc(k)+'">'+esc(k)+'</option>';}).join("");
+    sel.value=cur;
+  })();
+  buildGrpBar();
+}
+
+function onSearch(){var q=document.getElementById("q").value;document.getElementById("clrBtn").classList.toggle("show",!!q);renderBuscar();}
+function clearSearch(){document.getElementById("q").value="";document.getElementById("clrBtn").classList.remove("show");renderBuscar();}
+
+function renderCards(res, cont, cnt){
+  if(!res.length){if(cnt)cnt.textContent="";cont.innerHTML='<div class="empty"><div class="big"><i class="fa-solid fa-magnifying-glass"></i></div><div class="t">Sin resultados</div></div>';return;}
+  if(cnt)cnt.textContent=res.length+" prestador"+(res.length===1?"":"es");
+  var MAX=150, slice=res.slice(0,MAX);
+  cont.innerHTML=slice.map(function(r){
+    var idx=DATA.indexOf(r), ef=estadoFirma(r);
+    var sap=esc(G(r,"SAP")), ugl=esc(G(r,"UGL")), leg=esc(G(r,"LEGAJO")||G(r,"N_LEGAJO")||"");
+    // badge de reconsideración DI-4 (misma regla que la celda de la tabla del visor)
+    var rc="";
+    if(typeof esReconsiderable==="function"&&typeof reconsiderar375==="function"){
+      var rv=reconsiderar375(r);
+      if(esReconsiderable(r)||rv.veredicto==="RECALIFICA"){
+        var cfg={RECALIFICA:["#15803d","#dcfce7","✓ Recalifica DI-4"],REVISION:["#b45309","#fef3c7","? Revisión DI-4"],SIN_CUMPLIR:["#94a3b8","#f1f5f9","· Sin cambio DI-4"]}[rv.veredicto];
+        if(cfg) rc='<span class="tag" style="background:'+cfg[1]+';color:'+cfg[0]+';">'+cfg[2]+'</span>';
+      }
+    }
+    var m69chip=tieneM69(r)?'<span class="tag" style="background:#f3effe;color:#7c3aed;font-weight:900;">🏥 M69</span>':'';
+    return '<div class="card" onclick="abrirFicha('+idx+')"><div class="name">'+esc(G(r,"PRESTADOR")||"—")+'</div>'+
+      '<div class="meta">'
+      +(sap?'<span class="tag tag-copy" data-copy="'+sap+'" onclick="event.stopPropagation();copiarTexto(this.getAttribute(\'data-copy\'),this)" title="Tocar para copiar el SAP">SAP '+sap+' <i class="fa-regular fa-copy"></i></span>':"")
+      +(ugl?'<span class="tag ugl">'+ugl+'</span>':"")
+      +(leg?'<span class="tag tag-copy" data-copy="'+leg+'" onclick="event.stopPropagation();copiarTexto(this.getAttribute(\'data-copy\'),this)" title="Tocar para copiar el legajo">Leg. '+leg+' <i class="fa-regular fa-copy"></i></span>':"")
+      +m69chip+rc+'</div>'+
+      '<div class="state" style="background:'+ef.col+'14;color:'+ef.col+';"><span class="ic" style="background:'+ef.col+';"></span>'+esc(ef.lbl)+'<i class="fa-solid fa-chevron-right arrow"></i></div></div>';
+  }).join("");
+  if(res.length>MAX) cont.innerHTML+='<div class="res-count" style="text-align:center;padding:10px;">Mostrando '+MAX+' de '+res.length+' · refiná</div>';
+}
+
+function verTodos(){VER_TODOS=true;renderBuscar();}
+function cerrarVerTodos(){VER_TODOS=false;renderBuscar();}
+function renderBuscar(){
+  var q=up(document.getElementById("q").value.trim());
+  var fUgl=valF("fUgl"), fEst=valF("fEstado"), fTiempo=valF("fTiempo");
+  var fCumple=valF("fCumple"), fRecon=valF("fRecon"), fPopp=valF("fPopp"), fGrupoNota=valF("fGrupoNota"), fGrupoOK=valF("fGrupoOK");
+  var fMail=valF("fMail"), fRespUGL=valF("fRespUGL"), fResuelto=valF("fResuelto"), fPvUgl=valF("fPvUgl");
+  var fNotaPV=valF("fNotaPV"), fViab=valF("fViab"), fVig=valF("fVig"), fEE=valF("fEE"), fM69=valF("fM69"), fMsg=valF("fMsg");
+  var hayFiltro=!!(q||fUgl||fEst||fTiempo||fCumple||fRecon||fPopp||fGrupoNota||fGrupoOK||fMail||fRespUGL||fResuelto||fPvUgl||fNotaPV||fViab||fVig||fEE||fM69||fMsg);
+  var cont=document.getElementById("cards"), cnt=document.getElementById("resCount");
+  renderTags(); buildGrpBar();
+  var tools=document.getElementById("buscarTools");
+  if(!hayFiltro && !VER_TODOS){
+    BUSCAR_RES=[];
+    if(tools)tools.classList.remove("show");
+    cnt.textContent="";
+    cont.innerHTML='<div class="guide"><div class="ic"><i class="fa-solid fa-hand-pointer"></i></div><h3>Filtrá o buscá</h3><p>Universo: <b>'+nfmt(UNIVERSO_OFICIAL)+'</b> prestadores (SAP + UGL).<br>Abrí una temática de filtros arriba, o escribí el nombre / SAP del prestador.</p>'
+      +'<button class="vt-btn" onclick="verTodos()"><i class="fa-solid fa-table-list"></i> Ver todos los prestadores ('+nfmt(UNIVERSO_OFICIAL)+')</button></div>';
+    return;
+  }
+  // ── filtro: MISMOS criterios que __ceRender del visor ──
+  var res=DATA.filter(function(r){
+    if(fRecon){
+      if(!esReconsiderable(r))return false;
+      var _rv=reconsiderar375(r);
+      if(fRecon==="RECALIFICA"){ if(_rv.veredicto!=="RECALIFICA")return false; }
+      else if(fRecon==="REVISION"){ if(_rv.veredicto!=="REVISION")return false; }
+      else if(fRecon==="SIN_CUMPLIR"){ if(_rv.veredicto!=="SIN_CUMPLIR")return false; }
+      else if(fRecon.indexOf("G_")===0){ var _g=fRecon.slice(2); if(_rv.veredicto!=="RECALIFICA"||_rv.recalificaPorGrupos.indexOf(_g)<0)return false; }
+    }
+    if(fUgl && String(G(r,"UGL"))!==fUgl)return false;
+    if(fEst && String(G(r,"ULTIMO ESTADO"))!==fEst)return false;
+    if(fGrupoNota && String(G(r,"GRUPO NOTA"))!==fGrupoNota)return false;
+    if(fPopp && String(G(r,"EVALUACION POPP"))!==fPopp)return false;
+    if(fCumple){var c=cumple375(r);if(c!==fCumple)return false;}
+    if(fVig){if(vigente(r)!==fVig)return false;}
+    if(fEE){if((hasEE(r)?"SI":"NO")!==fEE)return false;}
+    if(fMsg){var hm=!!String(G(r,"MENSAJE")).trim();if(fMsg==="CON"&&!hm)return false;if(fMsg==="SIN"&&hm)return false;}
+    if(fM69){if((tieneM69(r)?"SI":"NO")!==fM69)return false;}
+    if(fNotaPV){
+      var _vn=String(G(r,"NOTA - UGTO")).toUpperCase();
+      var _vpEnUtm=String(G(r,"PV EN UTM")).toUpperCase().trim();
+      var _hasN=/NO-\d{4}/.test(_vn);
+      var _hasP=(_vpEnUtm!==""&&_vpEnUtm!=="NO"&&_vpEnUtm!=="-");
+      if(fNotaPV==="NOTA"&&!_hasN)return false;
+      if(fNotaPV==="PV"&&!_hasP)return false;
+      if(fNotaPV==="AMBOS"&&!(_hasN&&_hasP))return false;
+      if(fNotaPV==="NINGUNO"&&(_hasN||_hasP))return false;
+    }
+    if(fViab){
+      var _hv=!!String(G(r,"VIABILIZADOR POPP FINAL")).trim();
+      if((_hv?"SI":"NO")!==fViab)return false;
+    }
+    if(fPvUgl){if((tienePvUgl(r)?"SI":"NO")!==fPvUgl)return false;}
+    if(fMail){
+      var _mail=notifMailEstado(r);
+      if(fMail==="SI"&&_mail!=="ENVIADO")return false;
+      if(fMail==="PEND"&&_mail!=="PENDIENTE")return false;
+      if(fMail==="RENOT"){var _mr=up(G(r,"MAIL COMUNICACION"));if(_mr.indexOf("RENOTIFIC")<0)return false;}
+    }
+    if(fRespUGL){
+      var _ru=up(G(r,"RESPUESTA UGL")).trim();
+      if(fRespUGL==="SI"&&!_ru)return false;
+      if(fRespUGL==="NO"&&_ru)return false;
+      if(fRespUGL==="DOCU"&&!(_ru.indexOf("DOCU")>=0||_ru.indexOf("ACTUALIZ")>=0))return false;
+      if(fRespUGL==="CONSULTA"&&_ru.indexOf("CONSULT")<0)return false;
+    }
+    if(fResuelto){
+      var _rsv=up(G(r,"RESUELTO")).trim();
+      if(fResuelto==="SI"&&!(_rsv.indexOf("SI")>=0||_rsv.indexOf("RESUELT")>=0))return false;
+      if(fResuelto==="CONSRESP"&&_rsv.indexOf("CONSULT")<0)return false;
+      if(fResuelto==="ANALISIS"&&!(_rsv.indexOf("ANALIS")>=0||_rsv.indexOf("PEND")>=0))return false;
+      if(fResuelto==="RECHAZADO"&&_rsv.indexOf("RECHAZ")<0)return false;
+    }
+    if(fTiempo){
+      var _tp=window.__tiempoProceso(r);
+      if(!_tp.has)return false;
+      var _band=_tp.dias<=30?"V":(_tp.dias<=90?"A":"R");
+      if(_band!==fTiempo)return false;
+    }
+    if(q){
+      var blob=up([G(r,"PRESTADOR"),G(r,"SAP"),G(r,"UGL"),G(r,"EXPEDIENTE"),G(r,"GRUPO NOTA"),G(r,"OBSERVACIONES UGTO A"),G(r,"OBSERVACION POPP"),G(r,"OBSERVACIONES UGTO B"),G(r,"OBSERVACION POPP 2"),G(r,"NOTA - UGTO"),G(r,"PV - UGTO"),G(r,"RESULTADO FINAL"),G(r,"MENSAJE"),G(r,"ULTIMO ESTADO")].join(" "));
+      if(blob.indexOf(q)<0)return false;
+    }
+    return true;
+  });
+  // ── dedup por SAP+UGL DESPUÉS de filtrar (primera fila por combinación) — igual al visor ──
+  (function(){
+    var vistos={}, dedup=[];
+    res.forEach(function(r){
+      var k=String(G(r,"SAP")).toUpperCase().trim()+'||'+String(G(r,"UGL")).toUpperCase().trim();
+      if(!vistos[k]){ vistos[k]=1; dedup.push(r); }
+    });
+    res=dedup;
+  })();
+  res.sort(function(a,b){var na=uglNum(G(a,"UGL")),nb=uglNum(G(b,"UGL"));if(na!==nb)return na-nb;return String(G(a,"PRESTADOR")).localeCompare(String(G(b,"PRESTADOR")),"es");});
+  BUSCAR_RES=res;
+  if(tools){
+    tools.classList.toggle("show",res.length>0);
+    var bc=document.getElementById("btCount");
+    if(bc)bc.textContent=(VER_TODOS&&!hayFiltro)?("Listado completo · universo "+nfmt(UNIVERSO_OFICIAL)):(nfmt(res.length)+" caso"+(res.length===1?"":"s")+" del filtro");
+  }
+  renderCards(res, cont, cnt);
+}
+
+/* ── Export Excel de los resultados del filtro (uno o muchos) ── */
+function exportBuscarXLS(){
+  if(typeof XLSX==="undefined"){alert("La librería de Excel todavía no cargó. Esperá unos segundos y reintentá (requiere conexión).");return;}
+  var res=BUSCAR_RES||[];
+  if(!res.length){alert("No hay casos en el filtro para exportar.");return;}
+  var headers=["SAP","UGL","Prestador","Legajo","Expediente","Ingreso","Último estado","Etapa de firma","Días proceso","Cumple 375","Eval. POPP","Grupo nota","Contrato vigente","Internación M69","PV a UGL","Notif. UGL","Respuesta UGL","Resuelto","Reconsideración DI-4","Derivación DI-4"];
+  var aoa=[["Consulta RE 375/26 · prestadores del filtro"],["Generado: "+new Date().toLocaleString("es-AR")+" · "+res.length+" caso"+(res.length===1?"":"s")],[],headers];
+  res.forEach(function(r){
+    var ef=estadoFirma(r), tp=window.__tiempoProceso(r);
+    var verd="", deriv="";
+    if(typeof esReconsiderable==="function"&&typeof reconsiderar375==="function"){
+      var rv=reconsiderar375(r);
+      if(esReconsiderable(r)||rv.veredicto==="RECALIFICA"){
+        verd=rv.veredicto==="RECALIFICA"?("RECALIFICA"+(rv.recalificaPorGrupos.length?" ("+rv.recalificaPorGrupos.join(", ")+")":"")):(rv.veredicto==="REVISION"?"Requiere revisión":"Sin cambio");
+        deriv=rv.derivacion||"";
+      }
+    }
+    aoa.push([
+      String(G(r,"SAP")||""),String(G(r,"UGL")||""),String(G(r,"PRESTADOR")||""),
+      String(G(r,"LEGAJO")||G(r,"N_LEGAJO")||""),String(G(r,"EXPEDIENTE")||""),String(G(r,"INGRESO")||""),
+      String(G(r,"ULTIMO ESTADO")||""),(ef.idx>=0?ef.lbl:""),(tp.has?tp.dias:""),
+      cumple375(r)||"",String(G(r,"EVALUACION POPP")||""),String(G(r,"GRUPO NOTA")||""),
+      vigente(r)||"s/d",(tieneM69(r)?"SÍ":"NO"),
+      pvUgl(r)||"",
+      notifMailEstado(r)||"",String(G(r,"RESPUESTA UGL")||""),String(G(r,"RESUELTO")||""),
+      verd,deriv
+    ]);
+  });
+  var wb=XLSX.utils.book_new(), ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"]=[{wch:9},{wch:16},{wch:34},{wch:10},{wch:24},{wch:11},{wch:20},{wch:18},{wch:9},{wch:10},{wch:18},{wch:16},{wch:9},{wch:9},{wch:30},{wch:11},{wch:18},{wch:14},{wch:24},{wch:40}];
+  if(ws["A1"])ws["A1"].s={font:{bold:true,sz:13,color:{rgb:"0D3158"}}};
+  if(ws["A2"])ws["A2"].s={font:{italic:true,sz:9,color:{rgb:"94A3B8"}}};
+  for(var c=0;c<headers.length;c++){var ad=XLSX.utils.encode_cell({r:3,c:c});if(ws[ad])ws[ad].s={font:{bold:true,color:{rgb:"FFFFFF"},sz:10},fill:{fgColor:{rgb:"225BB0"}},alignment:{horizontal:"center"}};}
+  XLSX.utils.book_append_sheet(wb,ws,"Prestadores");
+  XLSX.writeFile(wb,"consulta_prestadores_"+(new Date().toISOString().slice(0,10))+".xlsx",{compression:true});
+}
+/* ════ FICHA ════ */
+function fRow(k,v){var val=(v==null||String(v).trim()==="")?null:v;return '<div class="f-row"><div class="k">'+esc(k)+'</div><div class="v'+(val?"":" muted")+'">'+(val?esc(val):"Sin dato")+'</div></div>';}
+function fSec(title,icon,rows,open){
+  return '<div class="f-sec"><div class="f-sec-head'+(open?" open":"")+'" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')"><span class="lft">'+icon+' '+esc(title)+'</span><i class="fa-solid fa-chevron-down chev"></i></div><div class="f-sec-body'+(open?" open":"")+'">'+rows+'</div></div>';
+}
+function abrirFicha(idx){
+  var r=DATA[idx];if(!r)return;
+  FICHA_IDX=idx;
+  var ef=estadoFirma(r);
+  document.getElementById("fNombre").textContent=G(r,"PRESTADOR")||"—";
+  document.getElementById("fMeta").textContent="SAP "+(G(r,"SAP")||"-")+" · "+(G(r,"UGL")||"-")+" · Leg. "+(G(r,"LEGAJO")||G(r,"N_LEGAJO")||"-");
+  var body="";
+  body+='<div class="f-hero" style="background:linear-gradient(135deg,'+ef.col+','+ef.col+'cc);"><div class="lbl">Estado del circuito de firma</div><div class="val">'+esc(ef.lbl)+'</div>'+(ef.desc?'<div class="desc">'+esc(ef.desc)+'</div>':"")+'</div>';
+  body+=fSec("Datos del prestador",'<i class="fa-solid fa-hospital" style="color:#225bb0;"></i>',
+    fRow("Prestador",G(r,"PRESTADOR"))+fRow("SAP",G(r,"SAP"))+fRow("UGL",G(r,"UGL"))+fRow("Legajo",G(r,"LEGAJO")||G(r,"N_LEGAJO"))+(function(){
+      var ee=String(G(r,"EXPEDIENTE")||"").trim();
+      if(!ee||up(ee).indexOf("SIN EX")>=0)return fRow("Expediente",G(r,"EXPEDIENTE"));
+      return '<div class="f-row"><div class="k">Expediente</div><div class="v" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'+esc(ee)+'<button class="copy-btn" data-copy="'+esc(ee)+'" onclick="copiarTexto(this.getAttribute(\'data-copy\'),this)"><i class="fa-regular fa-copy"></i> copiar</button></div></div>';
+    })()+fRow("Ingreso",G(r,"INGRESO"))+fRow("Vigente",G(r,"VIGENTE"))
+    +(tieneM69(r)?'<div class="f-row"><div class="k">Internación M69</div><div class="v" style="color:#7c3aed;font-weight:900;">🏥 Sí · población prioritaria</div></div>':fRow("Internación M69","No"))
+    +(function(){
+      if(!tieneM69(r)||!window.__CAPITA_M69)return "";
+      var sap=String(G(r,"SAP")||"").trim();
+      if(window.__CAPITA_M69[sap]==null)return fRow("Cápita internación","sin dato en la base de cápitas");
+      return '<div class="f-row"><div class="k">Cápita internación'+(window.__CAPITA_MES?' · '+esc(window.__CAPITA_MES):'')+'</div><div class="v" style="color:#0d9488;font-weight:900;">'+nfmt(Number(window.__CAPITA_M69[sap])||0)+'</div></div>';
+    })(),true);
+  body+=fSec("Cumplimiento RE 375",'<i class="fa-solid fa-clipboard-check" style="color:#16a34a;"></i>',
+    fRow("Resultado s/ grupo nota",G(r,"RESULTADO S/ GRUPO NOTA"))+fRow("Grupo OK",G(r,"GRUPO OK"))+fRow("Grupo nota",G(r,"GRUPO NOTA"))+fRow("Módulos 375",G(r,"DETALLE MODULOS NORMATIVA 375")));
+  // Reconsideración DI-2026-4 (mundo negativo, o cualquier estado donde la recalificación aplique)
+  if(typeof esReconsiderable==="function"&&typeof reconsiderar375==="function"){
+    var _rv=reconsiderar375(r);
+    if(esReconsiderable(r)||_rv.veredicto==="RECALIFICA"){
+      var _cfg={RECALIFICA:["#15803d","✓ Recalifica"],REVISION:["#b45309","? Requiere revisión"],SIN_CUMPLIR:["#64748b","· Sin cambio"]}[_rv.veredicto]||["#64748b","—"];
+      var _rrows='<div class="f-row"><div class="k">Veredicto</div><div class="v" style="color:'+_cfg[0]+';font-weight:900;">'+_cfg[1]+(_rv.recalificaPorGrupos.length?' · '+esc(_rv.recalificaPorGrupos.join(", ")):'')+'</div></div>'
+        +fRow("Explicación",_rv.explicacion)
+        +fRow("Derivación",_rv.derivacion)
+        +fRow("Módulos acreditados",(_rv.presentes||[]).join(", "));
+      body+=fSec("Reconsideración DI-2026-4",'<i class="fa-solid fa-scale-balanced" style="color:#15803d;"></i>',_rrows,_rv.veredicto==="RECALIFICA");
+    }
+  }
+  body+=fSec("Evaluación POPP",'<i class="fa-solid fa-file-lines" style="color:#0891b2;"></i>',
+    fRow("Evaluación POPP",G(r,"EVALUACION POPP"))+fRow("Observación POPP",G(r,"OBSERVACION POPP"))+fRow("Viabilizador POPP",G(r,"VIABILIZADOR POPP FINAL"))+fRow("Regularización contractual",G(r,"REGULARIZACION CONTRACTUAL - POPP"))+fRow("INLEG contrato",G(r,"INLEG CONTRATO"))+fRow("Observación POPP 2",G(r,"OBSERVACION POPP 2")));
+  body+=fSec("Intervención UGTO",'<i class="fa-solid fa-stamp" style="color:#7c3aed;"></i>',
+    fRow("Intervención UGTO-A",G(r,"INTERVENCION UGTO - A"))+fRow("Observaciones UGTO-A",G(r,"OBSERVACIONES UGTO A"))+fRow("Intervención UGTO-B",G(r,"INTERVENCION UGTO - B"))+fRow("Observaciones UGTO-B",G(r,"OBSERVACIONES UGTO B"))+fRow("Intervención UGTO-C",G(r,"INTERVENCION UGTO -C")||G(r,"INTERVENCION UGTO - C"))+fRow("Observaciones UGTO-C",G(r,"OBSERVACIONES UGTO C")||G(r,"OBSERVACION UGTO C"))+fRow("Nota UGTO",G(r,"NOTA - UGTO"))+fRow("PV a UTM",G(r,"PV - UGTO")));
+  body+=fSec("Circuito de firma",'<i class="fa-solid fa-pen-nib" style="color:#15803d;"></i>',
+    fRow("PV en UTM",G(r,"PV EN UTM"))
+    +(function(){
+      var v=pvUgl(r);
+      if(!v)return "";
+      var env=String(G(r,"ENVIADA UGL")||"").trim();
+      return '<div class="f-row"><div class="k" style="color:#7c3aed;">📨 PV a UGL'+(env?'<br><span style="font-weight:600;color:#94a3b8;">enviada '+esc(env)+'</span>':'')+'</div><div class="v"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;color:#7c3aed;font-weight:800;">'+esc(v)+'<button class="copy-btn" data-copy="'+esc(v)+'" onclick="copiarTexto(this.getAttribute(\'data-copy\'),this)"><i class="fa-regular fa-copy"></i> copiar</button></div><div style="font-size:9.5px;font-weight:600;color:#94a3b8;margin-top:4px;line-height:1.4;">Envío de la adenda a la UGL para gestionar la firma con el prestador.</div></div></div>';
+    })()
+    +fRow("INLEG adenda",G(r,"INLEG ADENDA"))+fRow("Inicio",G(r,"INICIO"))+fRow("Cierre",G(r,"CIERRE"))+fRow("Último estado",G(r,"ULTIMO ESTADO"))+fRow("Resultado final",G(r,"RESULTADO FINAL")));
+  body+=fSec("Comunicación UGL",'<i class="fa-solid fa-satellite-dish" style="color:#d97706;"></i>',
+    fRow("Mail comunicación",G(r,"MAIL COMUNICACION"))+fRow("Fecha inicial",G(r,"FECHA INICIAL"))+fRow("Respuesta UGL",G(r,"RESPUESTA UGL"))+fRow("Resuelto",G(r,"RESUELTO"))+fRow("Mensaje",G(r,"MENSAJE")));
+  document.getElementById("fBody").innerHTML=body;
+  document.getElementById("fBody").scrollTop=0;
+  document.getElementById("ficha").classList.add("open");
+}
+function cerrarFicha(){document.getElementById("ficha").classList.remove("open");}
+
+/* ── Copiar un dato puntual (SAP, legajo, expediente) con feedback ── */
+function copiarTexto(txt,el){
+  function done(){
+    if(!el)return;
+    var o=el.innerHTML;
+    el.innerHTML='✓ copiado';
+    el.classList.add('copied');
+    setTimeout(function(){el.innerHTML=o;el.classList.remove('copied');},900);
+  }
+  function fallback(){
+    var ta=document.createElement('textarea');ta.value=txt;
+    document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);done();
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(fallback);
+  } else fallback();
+}
+
+/* ── Enviar resumen del caso por WhatsApp ── */
+function enviarWhatsApp(){
+  var r=DATA[FICHA_IDX];
+  if(!r){alert("No hay un caso abierto.");return;}
+  function dato(v){v=String(v==null?"":v).trim();return v&&v!=="-"?v:"";}
+  var L=[];
+  L.push("🏥 *"+(dato(G(r,"PRESTADOR"))||"Prestador")+"*");
+  L.push("_Consulta RE 375/26 · resumen del caso_");
+  L.push("");
+  var ident=[];
+  if(dato(G(r,"SAP")))ident.push("SAP "+dato(G(r,"SAP")));
+  if(dato(G(r,"UGL")))ident.push(dato(G(r,"UGL")));
+  var leg=dato(G(r,"LEGAJO"))||dato(G(r,"N_LEGAJO"));
+  if(leg)ident.push("Leg. "+leg);
+  if(ident.length)L.push("🪪 "+ident.join(" · "));
+  var ee=dato(G(r,"EXPEDIENTE"));
+  if(ee&&up(ee).indexOf("SIN EX")<0)L.push("📁 EE: "+ee);
+  var tp=window.__tiempoProceso(r);
+  if(dato(G(r,"INGRESO")))L.push("📅 Ingreso: "+dato(G(r,"INGRESO"))+(tp.has?" · "+tp.dias+" días "+(tp.cerrado?"(cerrado)":"en proceso"):""));
+  L.push("");
+  var ef=estadoFirma(r);
+  if(dato(G(r,"ULTIMO ESTADO")))L.push("⚙️ *Último estado:* "+dato(G(r,"ULTIMO ESTADO")));
+  if(ef.idx>=0)L.push("✍️ *Etapa de firma:* "+ef.lbl);
+  if(tienePvUgl(r))L.push("📨 *PV a UGL:* "+pvUgl(r));
+  var c375=cumple375(r);
+  if(c375)L.push("📋 *Cumple 375:* "+c375);
+  if(dato(G(r,"EVALUACION POPP")))L.push("🔬 *Eval. POPP:* "+dato(G(r,"EVALUACION POPP")));
+  var vg=vigente(r);
+  if(vg)L.push("📄 *Contrato vigente:* "+vg);
+  if(tieneM69(r))L.push("🏥 *Internación M69:* Sí");
+  // comunicación
+  var com=[];
+  var nm=notifMailEstado(r);
+  if(nm)com.push("mail "+nm.toLowerCase());
+  if(dato(G(r,"RESPUESTA UGL")))com.push("respuesta: "+dato(G(r,"RESPUESTA UGL")));
+  if(dato(G(r,"RESUELTO")))com.push("resuelto: "+dato(G(r,"RESUELTO")));
+  if(com.length){L.push("");L.push("✉️ *Comunicación UGL:* "+com.join(" · "));}
+  // reconsideración DI-4
+  if(typeof esReconsiderable==="function"&&typeof reconsiderar375==="function"){
+    var rv=reconsiderar375(r);
+    if(esReconsiderable(r)||rv.veredicto==="RECALIFICA"){
+      var vl=rv.veredicto==="RECALIFICA"?("✓ Recalifica"+(rv.recalificaPorGrupos.length?" ("+rv.recalificaPorGrupos.join(", ")+")":"")):(rv.veredicto==="REVISION"?"? Requiere revisión":"Sin cambio");
+      L.push("");
+      L.push("⚖️ *Reconsideración DI-2026-4:* "+vl);
+      if(rv.derivacion)L.push("→ "+rv.derivacion);
+    }
+  }
+  var txt=L.join("\n");
+  window.open("https://wa.me/?text="+encodeURIComponent(txt),"_blank");
+}
+
+/* ── Descargar ficha del prestador en PDF (formato institucional premium) ── */
+function descargarPDF(){
+  var r=DATA[FICHA_IDX];
+  if(!r){alert("No hay un caso abierto.");return;}
+  if(!(window.jspdf&&window.jspdf.jsPDF)){alert("La librería de PDF todavía no cargó. Esperá unos segundos y reintentá (requiere conexión).");return;}
+  var doc=new window.jspdf.jsPDF({unit:"mm",format:"a4"});
+  var W=210,H=297,M=14,KW=50,y=0;
+  function T(s){return String(s==null?"":s).trim();}
+  // saneo: la tipografía estándar del PDF solo banca latin-1; los símbolos del espejo se mapean
+  function sx(s){
+    s=String(s==null?"":s);
+    s=s.replace(/[\u2714\u2713\u2705\u2611]/g,"[OK] ").replace(/[\u2717\u2718\u274C\u2716]/g,"[X] ").replace(/\u25D0/g,"[~] ").replace(/\u26A0\uFE0F?/g,"(!) ");
+    s=s.replace(/\|\|/g,"\n");
+    var out="";
+    for(var i=0;i<s.length;i++){var c=s.charCodeAt(i);if(c<=255)out+=s[i];else if(c===8211||c===8212)out+="-";}
+    return out.replace(/[ \t]+/g," ").replace(/ ?\n ?/g,"\n").trim();
+  }
+  function hx(h){h=String(h||"#64748b").replace("#","");return [parseInt(h.substr(0,2),16),parseInt(h.substr(2,2),16),parseInt(h.substr(4,2),16)];}
+  function salto(need){ if(y+need>H-18){ doc.addPage(); y=18; } }
+  function slug(s){return String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9]+/g,"_").replace(/^_+|_+$/g,"").slice(0,40);}
+
+  // ── encabezado institucional ──
+  doc.setFillColor(13,49,88); doc.rect(0,0,W,27,"F");
+  doc.setFillColor(20,184,166); doc.rect(0,27,W,1.4,"F");
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold"); doc.setFontSize(14);
+  var nom=doc.splitTextToSize(sx(T(G(r,"PRESTADOR"))||"Prestador"),W-2*M);
+  doc.text(nom,M,11);
+  doc.setFont("helvetica","normal"); doc.setFontSize(7.2); doc.setTextColor(160,190,225);
+  doc.text("CONSULTA RE 375/26   |   FICHA DEL PRESTADOR   |   "+new Date().toLocaleDateString("es-AR"),M,(nom.length>1?23:18.5));
+  y=35;
+
+  // ── pastillas de identificación ──
+  function pill(t,fill,col){
+    var w=doc.getTextWidth(t)+7;
+    doc.setFillColor(fill[0],fill[1],fill[2]);
+    doc.roundedRect(px,y-4.4,w,6.4,3.2,3.2,"F");
+    doc.setTextColor(col[0],col[1],col[2]);
+    doc.text(t,px+3.5,y);
+    px+=w+3;
+  }
+  doc.setFont("helvetica","bold"); doc.setFontSize(8);
+  var px=M;
+  var leg=T(G(r,"LEGAJO"))||T(G(r,"N_LEGAJO"))||"";
+  pill("SAP "+(sx(T(G(r,"SAP")))||"-"),[238,243,250],[34,91,176]);
+  pill(sx(T(G(r,"UGL")))||"-",[238,243,250],[13,49,88]);
+  if(leg)pill("Leg. "+sx(leg),[238,243,250],[71,85,105]);
+  if(tieneM69(r))pill("INTERNACION M69",[243,239,254],[124,58,237]);
+  y+=7;
+
+  // ── banda de estado del circuito ──
+  var ef=estadoFirma(r), c=hx(ef.col);
+  doc.setFillColor(c[0],c[1],c[2]); doc.roundedRect(M,y,W-2*M,14,2.5,2.5,"F");
+  doc.setTextColor(255,255,255); doc.setFont("helvetica","bold");
+  doc.setFontSize(6.6); doc.text("ESTADO DEL CIRCUITO DE FIRMA",M+5.5,y+5.2);
+  doc.setFontSize(11); doc.text(sx(T(ef.lbl)).toUpperCase(),M+5.5,y+11);
+  y+=21;
+
+  // ── secciones con filas cebradas ──
+  function seccion(titulo,filas){
+    var f=filas.map(function(x){return [x[0],sx(x[1]),x[2],x[3]?sx(x[3]):null];}).filter(function(x){return x[1];});
+    if(!f.length)return;
+    salto(16);
+    doc.setFillColor(34,91,176); doc.rect(M,y-3.4,1.8,4.6,"F");
+    doc.setFont("helvetica","bold"); doc.setFontSize(9.5); doc.setTextColor(13,49,88);
+    doc.text(titulo.toUpperCase(),M+4.5,y);
+    doc.setDrawColor(222,230,242); doc.setLineWidth(.4); doc.line(M,y+2.2,W-M,y+2.2);
+    y+=8;
+    f.forEach(function(x,i){
+      var col=x[2]?hx(x[2]):[35,46,62];
+      var vLines=doc.splitTextToSize(x[1],W-2*M-KW-6);
+      var nLines=x[3]?doc.splitTextToSize(x[3],W-2*M-KW-6):[];
+      var hRow=vLines.length*3.9+(nLines.length?nLines.length*3.1+1.6:0)+3.4;
+      salto(hRow+1);
+      if(i%2===0){ doc.setFillColor(247,250,253); doc.rect(M,y-3.6,W-2*M,hRow,"F"); }
+      doc.setFont("helvetica","bold"); doc.setFontSize(6.6); doc.setTextColor(139,154,175);
+      doc.text(doc.splitTextToSize(x[0].toUpperCase(),KW-4),M+2.5,y);
+      doc.setFont("helvetica","bold"); doc.setFontSize(8.4); doc.setTextColor(col[0],col[1],col[2]);
+      doc.text(vLines,M+KW,y);
+      var yy=y+vLines.length*3.9;
+      if(nLines.length){
+        doc.setFont("helvetica","italic"); doc.setFontSize(6.6); doc.setTextColor(148,163,184);
+        doc.text(nLines,M+KW,yy);
+      }
+      y+=hRow;
+    });
+    y+=4.5;
+  }
+
+  var tp=window.__tiempoProceso(r);
+  var capRow=[];
+  if(tieneM69(r)&&window.__CAPITA_M69){
+    var sp=T(G(r,"SAP"));
+    if(window.__CAPITA_M69[sp]!=null)capRow=[["Cápita internación"+(window.__CAPITA_MES?" - "+window.__CAPITA_MES:""),nfmt(Number(window.__CAPITA_M69[sp])||0),"#0d9488"]];
+  }
+  var leg2=leg||"";
+  seccion("Datos del prestador",[
+    ["SAP",G(r,"SAP")],["UGL",G(r,"UGL")],["Legajo",leg2],["Expediente",G(r,"EXPEDIENTE")],
+    ["Ingreso",T(G(r,"INGRESO"))+(tp.has?"  -  "+tp.dias+" días "+(tp.cerrado?"(cerrado)":"en proceso"):"")],
+    ["Contrato vigente",G(r,"VIGENTE")],["Internación M69",tieneM69(r)?"SÍ - población prioritaria":"No",tieneM69(r)?"#7c3aed":null]
+  ].concat(capRow));
+  seccion("Cumplimiento RE 375",[
+    ["Resultado s/ grupo nota",G(r,"RESULTADO S/ GRUPO NOTA")],["Grupo OK",G(r,"GRUPO OK")],
+    ["Grupo nota",G(r,"GRUPO NOTA")],["Módulos 375",G(r,"DETALLE MODULOS NORMATIVA 375")]
+  ]);
+  if(typeof esReconsiderable==="function"&&typeof reconsiderar375==="function"){
+    var rv=reconsiderar375(r);
+    if(esReconsiderable(r)||rv.veredicto==="RECALIFICA"){
+      var vc={RECALIFICA:["RECALIFICA","#15803d"],REVISION:["REQUIERE REVISIÓN","#b45309"],SIN_CUMPLIR:["SIN CAMBIO","#64748b"]}[rv.veredicto]||["—","#64748b"];
+      seccion("Reconsideración DI-2026-4",[
+        ["Veredicto",vc[0]+(rv.recalificaPorGrupos.length?" - "+rv.recalificaPorGrupos.join(", "):""),vc[1]],
+        ["Explicación",rv.explicacion],["Derivación",rv.derivacion],
+        ["Módulos acreditados",(rv.presentes||[]).join(", ")]
+      ]);
+    }
+  }
+  seccion("Evaluación POPP",[
+    ["Evaluación POPP",G(r,"EVALUACION POPP")],["Observación POPP",G(r,"OBSERVACION POPP")],
+    ["Viabilizador POPP",G(r,"VIABILIZADOR POPP FINAL")],["Regularización contractual",G(r,"REGULARIZACION CONTRACTUAL - POPP")],
+    ["INLEG contrato",G(r,"INLEG CONTRATO")],
+    ["Observación POPP 2",G(r,"OBSERVACION POPP 2")]
+  ]);
+  seccion("Intervención UGTO",[
+    ["Intervención UGTO-A",G(r,"INTERVENCION UGTO - A")],["Observaciones UGTO-A",G(r,"OBSERVACIONES UGTO A")],
+    ["Intervención UGTO-B",G(r,"INTERVENCION UGTO - B")],["Observaciones UGTO-B",G(r,"OBSERVACIONES UGTO B")],
+    ["Intervención UGTO-C",G(r,"INTERVENCION UGTO -C")||G(r,"INTERVENCION UGTO - C")],["Observaciones UGTO-C",G(r,"OBSERVACIONES UGTO C")||G(r,"OBSERVACION UGTO C")],
+    ["Nota UGTO",G(r,"NOTA - UGTO")],["PV a UTM",G(r,"PV - UGTO")]
+  ]);
+  var envU=T(G(r,"ENVIADA UGL"));
+  seccion("Circuito de firma",[
+    ["PV en UTM",G(r,"PV EN UTM")],
+    ["PV a UGL"+(envU?" - enviada "+envU:""),pvUgl(r),"#7c3aed",pvUgl(r)?"Envío de la adenda a la UGL para gestionar la firma con el prestador.":null],
+    ["INLEG adenda",G(r,"INLEG ADENDA")],
+    ["Inicio",G(r,"INICIO")],["Cierre",G(r,"CIERRE")],
+    ["Último estado",G(r,"ULTIMO ESTADO")],["Resultado final",G(r,"RESULTADO FINAL")]
+  ]);
+  seccion("Comunicación UGL",[
+    ["Mail comunicación",G(r,"MAIL COMUNICACION")],["Fecha inicial",G(r,"FECHA INICIAL")],
+    ["Respuesta UGL",G(r,"RESPUESTA UGL")],["Resuelto",G(r,"RESUELTO")],["Mensaje",G(r,"MENSAJE")]
+  ]);
+
+  // ── pie de página en todas las hojas ──
+  var nP=doc.getNumberOfPages();
+  for(var p=1;p<=nP;p++){
+    doc.setPage(p);
+    doc.setDrawColor(222,230,242); doc.setLineWidth(.3); doc.line(M,H-12,W-M,H-12);
+    doc.setFont("helvetica","normal"); doc.setFontSize(6.5); doc.setTextColor(150,163,184);
+    doc.text("Consulta RE 375/26 - UGTO / POPP - generado "+new Date().toLocaleString("es-AR"),M,H-8);
+    doc.text("Página "+p+" de "+nP,W-M,H-8,{align:"right"});
+  }
+  var fn="ficha_"+(T(G(r,"SAP"))||"sap")+"_"+(slug(G(r,"PRESTADOR"))||"prestador")+"_"+new Date().toISOString().slice(0,10)+".pdf";
+  doc.save(fn);
+}
+
+/* ════════ NÚMEROS — réplica del Tablero general del visor ════════ */
+function ueUp(s){return String(s==null?"":s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toUpperCase().trim().replace(/\s+/g," ");}
+function zonaUE(estado){
+  var u=ueUp(estado);
+  if(u.indexOf("APROB")>=0) return "_cierre";                                  // cierre positivo
+  if(u.indexOf("RECHAZ")>=0||u.indexOf("ADENDA NEGATIVA")>=0||u.indexOf("DEVOLUCION NEGATIVA")>=0) return "negativo";
+  if(u.indexOf("PENDIENTE")>=0&&u.indexOf("FIRMA")>=0) return "falta";         // pend. firma contrato principal → DENTRO de falta
+  if(u.indexOf("EN UTM")>=0||u.indexOf("DERIVAR A UTM")>=0||u.indexOf("DERIVADO A UTM")>=0||u.indexOf("PV UTM")>=0||(u.indexOf("SIN EE")>=0&&u.indexOf("UTM")>=0)) return "avanza";
+  if(u.indexOf("ADENDA FIRMADA")>=0||u.indexOf("ADENDA FINALIZADA")>=0||u.indexOf("FIRMAD")>=0) return "_cierre"; // firmadas → bloque de cierre
+  if(u.indexOf("ADENDA EN")>=0||u.indexOf("ADENDA CON VB")>=0||u.indexOf("ASIGNACION DE CAPITA")>=0) return "_circuito"; // intermedios → fila agregada en avanza
+  if(u.indexOf("DEVOLVER")>=0||u.indexOf("DEVOLU")>=0) return "negativo";
+  if(u.indexOf("UGL")>=0) return "falta";
+  return "pendiente";
+}
+function gvr(r,name){ if(r[name]!==undefined)return r[name]; var t=ueUp(name); for(var k in r){ if(r.hasOwnProperty(k)&&ueUp(k)===t) return r[k]; } return ""; }
+/* PV que UGTO envía a la UGL en la gestión de firma (columna Z del espejo, header "PV -UGL") */
+function pvUgl(r){
+  for(var k in r){
+    if(!r.hasOwnProperty(k))continue;
+    var ku=ueUp(k).replace(/[\s\-]/g,"");
+    if(ku==="PVUGL"){var v=String(r[k]||"").trim();return (v==="-"||up(v)==="NO")?"":v;}
+  }
+  return "";
+}
+function tienePvUgl(r){var v=pvUgl(r);return !!v&&/\d/.test(v);}
+
+/* caminito de firma desde la hoja INTERVENCION UGTO-C (igual al visor) */
+var FIRMA_ORDEN=['DERIVADO A UTM','ENVIADA A GANPR','RECIBE VB ADENDA','NOTIFICADA A UGL','RECIBE ADENDA','ENVIADA A GPM','ENVIADA A ULYT','ENVIADA A DE','ADENDA FIRMADA','FIRMADA','CAPITAS GPM','POPP CARGA ADENDA','CIERRE · AVISO UGL','DEVOLUCION NEGATIVA'];
+function ordFirma(lbl){ var u=ueUp(lbl); for(var fi=0;fi<FIRMA_ORDEN.length;fi++){ if(ueUp(FIRMA_ORDEN[fi])===u) return fi; } return 99; }
+var FIRMA_DATA={etapas:[],total:0};
+function calcFirmaCircuito(d){
+  var etapas=[], total=0;
+  if(d.intervC && d.intervC.rows && d.intervC.headers){
+    var hLbl=d.intervC.headers[0], hCnt=null;
+    for(var ci=0;ci<d.intervC.headers.length;ci++){ var hu=ueUp(d.intervC.headers[ci]); if(hu.indexOf('PRESTADORES')>=0 && hu.indexOf('SAP')>=0){ hCnt=d.intervC.headers[ci]; break; } }
+    if(!hCnt) hCnt=d.intervC.headers[1];
+    d.intervC.rows.forEach(function(r){
+      var lbl=String(r[hLbl]||'').trim(), U=ueUp(lbl);
+      if(!lbl || U.indexOf('SUMA')>=0) return;
+      var ord=ordFirma(lbl);
+      if(ord===99) return; // descarta FINALIZO OK / no-etapas
+      var v=parseInt(String(r[hCnt]||'').replace(/[^\d-]/g,''))||0;
+      etapas.push({lbl:lbl, v:v, ord:ord}); total+=v;
+    });
+    etapas.sort(function(a,b){ return a.ord-b.ord; });
+  }
+  FIRMA_DATA={etapas:etapas,total:total};
+}
+function abrirModalFirma(){
+  var et=FIRMA_DATA.etapas||[];
+  var maxV=et.reduce(function(m,e){return Math.max(m,e.v);},1)||1;
+  document.getElementById("fmTotal").textContent=nfmt(FIRMA_DATA.total);
+  document.getElementById("fmSub").textContent=et.length+" etapas del circuito · recorrido completo";
+  document.getElementById("fmBody").innerHTML=et.map(function(e,idx){
+    var U=ueUp(e.lbl);
+    var esNeg=/NEGATIV|DEVOLU/.test(U);
+    var esFin=/FIRMAD|CIERRE|CAPITAS|POPP CARGA/.test(U);
+    var cls=e.v<=0?"z":(esNeg?"neg":(esFin?"firm":"has"));
+    var w=Math.max(3,Math.round(e.v/maxV*100));
+    return '<div class="fm-stage '+cls+'"><div class="num">'+(idx+1)+'</div><div class="nm">'+esc(e.lbl)+(esNeg?' <span style="font-size:9px;color:#dc2626;font-weight:800;">(negativa)</span>':'')+'</div><div class="bar"><i style="width:'+w+'%;"></i></div><div class="vv">'+nfmt(e.v)+'</div></div>';
+  }).join("");
+  document.getElementById("fmOv").classList.add("open");
+}
+function cerrarModalFirma(){document.getElementById("fmOv").classList.remove("open");}
+
+/* adendas firmadas: lista interactiva desde la TD (quiénes, ingreso, días) */
+function listaFirmadas(){
+  var out=[], vistos={};
+  DATA.forEach(function(r,idx){
+    var i=etapaFirma(r);
+    if(i>=8){ // adenda firmada en adelante (cápitas, carga POPP, cierre)
+      var k=String(G(r,"SAP")).toUpperCase().trim()+'||'+String(G(r,"UGL")).toUpperCase().trim();
+      if(vistos[k])return; vistos[k]=1;
+      var tp=window.__tiempoProceso(r);
+      out.push({idx:idx, prest:G(r,"PRESTADOR")||"—", ugl:G(r,"UGL")||"-", sap:G(r,"SAP")||"-", ing:String(G(r,"INGRESO")||"").trim(), dias:tp.has?tp.dias:null});
+    }
+  });
+  out.sort(function(a,b){return (a.dias==null?-1:a.dias)-(b.dias==null?-1:b.dias);});
+  return out;
+}
+function toggleFirmadas(el){
+  el.classList.toggle("open");
+  document.getElementById("firmList").classList.toggle("open");
+}
+
+function buildStats(){
+  var cont=document.getElementById("statsContent");
+  if(!D_ALL){cont.innerHTML='<div class="empty"><div class="t">Cargando…</div></div>';return;}
+  var d=D_ALL;
+  calcFirmaCircuito(d);
+  // ── KPIs superiores (idénticos al tablero) ──
+  var sapUglTotal=0, prestUnicos=0, expTotalMesa=0, sinEEMesa=0, devEE=0;
+  if(d.ultimoEstado){
+    var sumRow=d.ultimoEstado.rows.find(function(r){return (r["ULTIMO ESTADO"]||"").toLowerCase().includes("suma");});
+    if(sumRow){sapUglTotal=parseInt(sumRow["Prestadores (sap-ugl)"])||0;prestUnicos=parseInt(sumRow["Prestadores Unicos"])||0;}
+  }
+  if(d.mesa){
+    d.mesa.rows.forEach(function(r){
+      var k=(r["INTERVENCION MESA"]||r[d.mesa.headers[0]]||"").toUpperCase();
+      if(k.includes("SUMA")) expTotalMesa+=parseInt(r["Expedientes totales"])||0;
+      if(k.includes("INGRESA SIN EE")) sinEEMesa+=parseInt(r["Expedientes totales"])||0;
+      if(k.includes("SE DEVUELVE")) devEE+=parseInt(r["Expedientes totales"])||0;
+    });
+  }
+  var euTot=Math.max(0,(expTotalMesa||0)-(devEE||0));
+  var euReal=Math.max(0,euTot-(sinEEMesa||0));
+
+  // ── Indicadores de Último Estado: agrupar por zona ──
+  var items=[];
+  if(d.ultimoEstado) d.ultimoEstado.rows.forEach(function(r){
+    var es=(r["ULTIMO ESTADO"]||"").trim();
+    if(!es||es.toLowerCase().indexOf("suma")>=0) return;
+    var v=parseInt(r["Prestadores (sap-ugl)"])||0;
+    if(v<=0) return;
+    items.push({estado:es,v:v});
+  });
+  var tot=sapUglTotal>0?sapUglTotal:items.reduce(function(s,i){return s+i.v;},0);
+  var grupos={avanza:[],falta:[],pendiente:[],negativo:[]};
+  var circuito=[], cierre=[];
+  items.forEach(function(it){
+    var z=zonaUE(it.estado);
+    if(z==="_circuito"){circuito.push(it);return;}
+    if(z==="_cierre"){cierre.push(it);return;}
+    if(grupos[z]) grupos[z].push(it);
+  });
+  var circuitoV=circuito.reduce(function(s,i){return s+i.v;},0);
+  var cierreV=cierre.reduce(function(s,i){return s+i.v;},0);
+  Object.keys(grupos).forEach(function(z){grupos[z].sort(function(a,b){return b.v-a.v;});});
+  // los intermedios del circuito de firma suman al verde como UNA fila agregada
+  if(circuitoV>0) grupos.avanza.push({estado:"En circuito de firma", v:circuitoV, _col:"#15803d"});
+  // las firmadas TAMBIÉN son avance: cuentan en el KPI verde con su fila propia
+  // (el bloque de cierre de abajo queda solo como acceso a "quiénes son")
+  if(cierreV>0) grupos.avanza.push({estado:"Adendas firmadas", v:cierreV, _col:"#15803d"});
+  function sumZ(z){return grupos[z].reduce(function(s,i){return s+i.v;},0);}
+  var nAvanza=sumZ("avanza"), nFalta=sumZ("falta"), nPend=sumZ("pendiente"), nNeg=sumZ("negativo");
+  function pctf(v){return tot>0?Math.round(v/tot*100):0;}
+
+  // ── Acciones en curso (sobre la TD completa, igual al visor) ──
+  var acc={pv:0,nota:0,mail:0,viab:0,contrato:0,pvUgl:0};
+  DATA.forEach(function(r){
+    if(/PV-\d{4}/.test(ueUp(gvr(r,"PV - UGTO")))) acc.pv++;
+    if(/NO-\d{4}/.test(ueUp(gvr(r,"NOTA - UGTO")))) acc.nota++;
+    if(tienePvUgl(r)) acc.pvUgl++;
+    if(notifMailEstado(r)==="ENVIADO") acc.mail++;
+    if(String(gvr(r,"VIABILIZADOR POPP FINAL")).trim()) acc.viab++;
+    var rc=ueUp(gvr(r,"REGULARIZACION CONTRACTUAL - POPP"));
+    if(rc.indexOf("CONTRATADO")>=0||rc.indexOf("CONTRATO ENVIADO")>=0||rc.indexOf("ENVIADO CONTRATO")>=0) acc.contrato++;
+  });
+  // PV EN UTM (columna fija): si está cargada, pisa el conteo por regex
+  (function(){var c=0;DATA.forEach(function(r){var pv=ueUp(gvr(r,"PV EN UTM"));if(pv.trim()&&pv!=="NO"&&pv!=="-")c++;});if(c>0)acc.pv=c;})();
+
+  // ── Render KPIs superiores ──
+  function kpiHero(){
+    return '<div class="num-hero">'+
+      '<div class="nh-main"><div class="nh-dot"></div><div class="nh-lbl">Universo procesado</div>'+
+        '<div class="nh-big">'+nfmt(sapUglTotal)+'</div><div class="nh-sub">prestadores procesados · SAP + UGL</div></div>'+
+      '<div class="nh-side">'+
+        '<div class="nh-item"><div class="nh-n" style="color:#c4b5fd;">'+nfmt(prestUnicos)+'</div><div class="nh-t">Prestadores distintos<span>SAPs únicos</span></div></div>'+
+        '<div class="nh-line"></div>'+
+        '<div class="nh-item"><div class="nh-n" style="color:#7dd3fc;">'+nfmt(euTot)+'</div><div class="nh-t">Expedientes trabajados<span>'+nfmt(euReal)+' reales</span></div></div>'+
+      '</div></div>'+
+      '<div class="num-hero2">'+
+        '<div class="nh2-l"><div class="nh2-lbl"><i class="fa-solid fa-inbox"></i> Flujo documental</div><div class="nh2-big">'+nfmt(expTotalMesa)+'</div><div class="nh2-sub">expedientes recibidos</div></div>'+
+        '<div class="nh2-r"><div class="nh2-badge">⚠ Depuración</div><div class="nh2-n">'+nfmt(devEE)+'</div><div class="nh2-t">Expedientes devueltos</div></div>'+
+      '</div>';
+  }
+  function divider(txt){return '<div class="divider"><div class="ln"></div><div class="vx">'+txt+'</div><div class="ln"></div></div>';}
+
+  // ── Las 4 grandes con desglose colapsable ──
+  function bigCard(ic,col,bg,n,lbl,detalle){
+    var det=detalle.map(function(it){
+      var p=pctf(it.v), c=it._col||ueColor(it.estado);
+      return '<div class="row"><span class="lbl">'+esc(estadoLbl(it.estado))+'</span><span class="bar"><i style="width:'+p+'%;background:'+c+';"></i></span><span class="v">'+nfmt(it.v)+'<small>'+p+'%</small></span></div>';
+    }).join("");
+    return '<div class="big-card" style="border-top:3px solid '+col+';">'+
+      '<div class="big-head" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">'+
+        '<div class="bh-l"><span class="bh-ic" style="background:'+bg+';color:'+col+';">'+ic+'</span><span class="bh-lbl">'+lbl+'</span></div>'+
+        '<div class="bh-r"><span class="bh-n" style="color:'+col+';">'+nfmt(n)+'</span><span class="bh-pct">'+pctf(n)+'%</span><i class="fa-solid fa-chevron-down chev"></i></div>'+
+      '</div>'+
+      '<div class="big-detail">'+(det||'<div class="row"><span class="lbl" style="color:#94a3b8;">Sin desglose</span></div>')+'</div>'+
+    '</div>';
+  }
+  function estadoLbl(e){var u=ueUp(e);if(u.indexOf("PENDIENTE")>=0&&u.indexOf("FIRMA")>=0)return "Pend. firma · contrato principal";return e;}
+  function ueColor(e){
+    var u=ueUp(e);
+    if(u.indexOf("RECHAZ")>=0||u.indexOf("NEGATIV")>=0||u.indexOf("DEVOLVER")>=0)return "#dc2626";
+    if(u.indexOf("APROB")>=0||u.indexOf("FIRMAD")>=0||u.indexOf("FINALIZ")>=0)return "#16a34a";
+    if(u.indexOf("UTM")>=0)return "#7c3aed";
+    if(u.indexOf("UGL")>=0||u.indexOf("ANALISIS")>=0)return "#0891b2";
+    return "#64748b";
+  }
+  function accCard(ic,bg,col,n,lbl,full){
+    return '<div class="acc"'+(full?' style="grid-column:1/-1;"':'')+'><span class="ic" style="background:'+bg+';color:'+col+';"><i class="fa-solid '+ic+'"></i></span><div><div class="n" style="color:'+col+';">'+nfmt(n)+'</div><div class="l">'+lbl+'</div></div></div>';
+  }
+
+  // ── Gestión de firma (Opción A: card → modal) ──
+  function firmaCard(){
+    if(!FIRMA_DATA.etapas.length) return '';
+    return divider("Gestión de firma")+
+      '<div class="gfA" onclick="abrirModalFirma()"><div class="top">'+
+        '<div class="lf"><span class="ic"><i class="fa-solid fa-pen-nib"></i></span><div><div class="ti">Gestión de firma de adenda</div><div class="su">'+FIRMA_DATA.etapas.length+' etapas del circuito</div></div></div>'+
+        '<div class="big">'+nfmt(FIRMA_DATA.total)+'</div>'+
+      '</div><div class="cta"><i class="fa-solid fa-layer-group"></i> Tocar para ver el recorrido completo</div></div>';
+  }
+
+  // ── Adendas firmadas (cierre, interactiva, al final) ──
+  function cierreCard(){
+    var lista=listaFirmadas();
+    var n=lista.length||cierreV;
+    var rows=lista.map(function(f){
+      var dd=f.dias==null?'<span style="color:#cbd5e1;">—</span>':('<b style="color:'+(f.dias<=30?'#16a34a':(f.dias<=90?'#d97706':'#dc2626'))+';">'+f.dias+' días</b>');
+      return '<div class="firm-row" onclick="abrirFicha('+f.idx+')">'+
+        '<div class="nm"><div class="p">'+esc(f.prest)+'</div><div class="u">SAP '+esc(f.sap)+' · '+esc(f.ugl)+'</div></div>'+
+        '<div class="fch">Ingreso '+(f.ing?esc(f.ing):'s/d')+'<br>'+dd+'</div>'+
+        '<i class="fa-solid fa-chevron-right" style="color:#cbd5e1;font-size:11px;"></i></div>';
+    }).join("");
+    return divider("Cierre del circuito")+
+      '<div class="cierre" onclick="toggleFirmadas(this)">'+
+        '<div class="big">'+nfmt(n)+'</div>'+
+        '<div class="meta"><div class="k">Adendas firmadas</div><div class="v">Firmadas · cierre OK</div><div class="s">'+pctf(n)+'% del universo · tocá para ver quiénes son</div></div>'+
+        '<i class="fa-solid fa-chevron-down chev"></i>'+
+      '</div>'+
+      '<div class="firm-list" id="firmList">'+(rows||'<div style="text-align:center;color:#94a3b8;font-size:12px;padding:10px;">Sin casos firmados aún</div>')+'</div>';
+  }
+
+  // ── Reconsideración DI-2026-4: universo = dedup SAP+UGL (última fila = vigente) → filtrar negativos ──
+  function reconUniverso(){
+    var map={};
+    DATA.forEach(function(r){map[up(G(r,"SAP"))+"||"+up(G(r,"UGL"))]=r;});
+    var uni=[];for(var k in map){if(map.hasOwnProperty(k)&&esReconsiderable(map[k]))uni.push(map[k]);}
+    return uni;
+  }
+  function reconStats(rows){
+    var reca=0,rev=0,sin=0,pg={"Imágenes":0,"Especialidades":0,"Oftalmología":0};
+    var dVig=0,dNoVig=0,dSd=0; // derivación de los que recalifican
+    var byOrigen={};
+    function origen(r){var u=up(G(r,"ULTIMO ESTADO"));if(u.indexOf("RECHAZ")>=0&&u.indexOf("UGTO")>=0)return "Rechazado UGTO";if(u.indexOf("RECHAZ")>=0&&u.indexOf("POPP")>=0)return "Rechazado POPP";if(u.indexOf("DEVOLVER")>=0||u.indexOf("DEVOLU")>=0)return "Devolver EE";if(u.indexOf("RECHAZ")>=0)return "Rechazado";return "Otro negativo";}
+    rows.forEach(function(r){
+      var v=reconsiderar375(r);
+      var o=origen(r);
+      if(!byOrigen[o])byOrigen[o]={total:0,reca:0,rev:0,sin:0};
+      byOrigen[o].total++;
+      if(v.veredicto==="RECALIFICA"){
+        reca++;byOrigen[o].reca++;
+        v.recalificaPorGrupos.forEach(function(g){if(pg[g]!=null)pg[g]++;});
+        var vg=vigente(r);
+        if(vg==="SI")dVig++; else if(vg==="NO")dNoVig++; else dSd++;
+      }
+      else if(v.veredicto==="REVISION"){rev++;byOrigen[o].rev++;}
+      else {sin++;byOrigen[o].sin++;}
+    });
+    return {tot:rows.length,reca:reca,rev:rev,sin:sin,pg:pg,byOrigen:byOrigen,dVig:dVig,dNoVig:dNoVig,dSd:dSd};
+  }
+  function rmini(n,lbl,col){return '<div style="flex:1;text-align:center;background:'+col+'0f;border:1px solid '+col+'33;border-radius:12px;padding:12px 4px;"><div style="font-size:23px;font-weight:900;color:'+col+';line-height:1;">'+nfmt(n)+'</div><div style="font-size:8.5px;font-weight:800;color:'+col+';margin-top:4px;line-height:1.2;">'+lbl+'</div></div>';}
+  function reconInner(S,nota){
+    var origenes=["Rechazado UGTO","Rechazado POPP","Devolver EE","Rechazado","Otro negativo"].filter(function(o){return S.byOrigen[o];});
+    var filas=origenes.map(function(o){var d=S.byOrigen[o];
+      return '<tr style="border-bottom:1px solid #f1f5f9;"><td style="padding:7px 8px;font-weight:800;color:#334155;font-size:10.5px;">'+esc(o)+'</td><td style="padding:7px 4px;text-align:center;font-weight:900;color:#0d3158;font-size:11px;">'+d.total+'</td><td style="padding:7px 4px;text-align:center;font-weight:900;color:#16a34a;font-size:11px;">'+d.reca+'</td><td style="padding:7px 4px;text-align:center;font-weight:800;color:#d97706;font-size:11px;">'+d.rev+'</td><td style="padding:7px 4px;text-align:center;font-weight:800;color:#94a3b8;font-size:11px;">'+d.sin+'</td></tr>';
+    }).join("");
+    return '<div style="padding-top:10px;">'
+      +'<div style="font-size:10.5px;color:var(--txt2);line-height:1.5;margin-bottom:10px;">'+nota+'</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:12px;">'+rmini(S.reca,"✓ Recalifica","#15803d")+rmini(S.rev,"? Requiere revisión","#d97706")+rmini(S.sin,"Sin cambio","#94a3b8")+'</div>'
+      +'<div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Recalifican por grupo</div>'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;">'
+        +["Imágenes","Especialidades","Oftalmología"].map(function(g){return '<span style="font-size:10px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:99px;padding:4px 11px;">'+g+': '+nfmt(S.pg[g])+'</span>';}).join("")
+      +'</div>'
+      +(S.reca>0?'<div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Derivación de los que recalifican</div>'
+      +'<div style="display:flex;flex-direction:column;gap:5px;margin-bottom:12px;">'
+        +'<div style="display:flex;justify-content:space-between;font-size:10.5px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:7px 11px;"><span style="font-weight:700;color:#15803d;">✓ Apto derivar PV a UTM (contrato vigente)</span><b style="color:#15803d;">'+nfmt(S.dVig)+'</b></div>'
+        +'<div style="display:flex;justify-content:space-between;font-size:10.5px;background:#fffbeb;border:1px solid #fde68a;border-radius:9px;padding:7px 11px;"><span style="font-weight:700;color:#b45309;">⚠ Regularizar firma de contrato primero</span><b style="color:#b45309;">'+nfmt(S.dNoVig)+'</b></div>'
+        +'<div style="display:flex;justify-content:space-between;font-size:10.5px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:7px 11px;"><span style="font-weight:700;color:#64748b;">? Verificar vigencia contractual</span><b style="color:#64748b;">'+nfmt(S.dSd)+'</b></div>'
+      +'</div>':'')
+      +'<div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Impacto por estado de origen</div>'
+      +'<table style="width:100%;border-collapse:collapse;"><thead><tr style="background:#f8fafc;"><th style="padding:6px 8px;text-align:left;font-size:8px;font-weight:900;text-transform:uppercase;color:#64748b;">Estado original</th><th style="padding:6px 4px;font-size:8px;font-weight:900;text-transform:uppercase;color:#64748b;">Total</th><th style="padding:6px 4px;font-size:8px;font-weight:900;text-transform:uppercase;color:#16a34a;">Reca.</th><th style="padding:6px 4px;font-size:8px;font-weight:900;text-transform:uppercase;color:#d97706;">Rev.</th><th style="padding:6px 4px;font-size:8px;font-weight:900;text-transform:uppercase;color:#94a3b8;">Sin</th></tr></thead><tbody>'+filas+'</tbody></table>'
+    +'</div>';
+  }
+  function reconBlock(){
+    if(typeof reconsiderar375!=="function"||typeof esReconsiderable!=="function")return "";
+    var uni=reconUniverso();
+    if(!uni.length)return "";
+    var S=reconStats(uni);
+    return divider("Reconsideración DI-2026-4")+
+      '<div class="big-card" style="border-top:3px solid #15803d;">'+
+        '<div class="big-head" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">'+
+          '<div class="bh-l"><span class="bh-ic" style="background:#dcfce7;color:#15803d;"><i class="fa-solid fa-scale-balanced"></i></span><span class="bh-lbl">Reconsideración por regla modular</span></div>'+
+          '<div class="bh-r"><span class="bh-n" style="color:#15803d;">'+nfmt(S.reca)+'</span><span class="bh-pct">de '+nfmt(S.tot)+'</span><i class="fa-solid fa-chevron-down chev"></i></div>'+
+        '</div>'+
+        '<div class="big-detail">'+reconInner(S,"Reevaluación del universo negativo vigente bajo la nueva regla modular DI-2026-4 (sustituye Anexos III/VII de RESOL-375). Universo: estado vigente por SAP+UGL.")+'</div>'+
+      '</div>';
+  }
+
+  // ── MONITOR INTERNACIÓN · MÓDULO 69 (sección/corte dentro de Números) ──
+  function etapaM69(r){
+    var u=up(G(r,"ULTIMO ESTADO"));
+    if(u.indexOf("RECHAZ")>=0||u.indexOf("DEVOLVER")>=0||u.indexOf("DEVOLUC")>=0||u.indexOf("ADENDA NEGATIVA")>=0) return 6;
+    if(u.indexOf("APROB")>=0||u.indexOf("ADENDA FIRMADA")>=0||u.indexOf("ADENDA FINALIZADA")>=0||u.indexOf("FIRMAD")>=0) return 5;
+    if(u.indexOf("PENDIENTE")>=0&&u.indexOf("FIRMA")>=0) return 4;
+    if(u.indexOf("UTM")>=0) return 4;
+    if(u.indexOf("ADENDA EN")>=0||u.indexOf("ADENDA CON VB")>=0||u.indexOf("ASIGNACION DE CAPITA")>=0) return 4;
+    if(u.indexOf("UGL")>=0) return 3;
+    if(u.indexOf("ANALISIS")>=0||u.indexOf("POPP")>=0) return 2;
+    if(u.indexOf("RECIB")>=0||u.indexOf("SIN EE")>=0) return 1;
+    if(u) return 1;
+    var inlegAd=up(G(r,"INLEG ADENDA")), cierreC=up(G(r,"CIERRE")), intC=up(G(r,"INTERVENCION UGTO -C")||G(r,"INTERVENCION UGTO - C")||""), intB=up(G(r,"INTERVENCION UGTO - B"));
+    if(inlegAd.indexOf("INLEG-")>=0) return 4;
+    if(cierreC.indexOf("UTM")>=0||inlegAd.indexOf("UTM")>=0) return 4;
+    if(intC&&intC!=="-") return 3;
+    if(intB&&intB!=="-") return 3;
+    return 1;
+  }
+  function m69Block(){
+    // Universo M69 = SAP+UGL únicos con marca de internación (igual al pivot de la TD).
+    // Dedup con ÚLTIMA fila por combinación = estado vigente. Contar filas crudas inflaba el número.
+    var M=(function(){
+      var last={};
+      DATA.forEach(function(r){ if(!tieneM69(r))return; last[up(G(r,"SAP"))+"||"+up(G(r,"UGL"))]=r; });
+      var out=[];for(var k in last){if(last.hasOwnProperty(k))out.push(last[k]);}
+      return out;
+    })();
+    if(!M.length) return "";
+    var ET=[{n:1,lbl:"Ingreso / Recibido",col:"#0ea5e9"},{n:2,lbl:"Análisis POPP",col:"#6366f1"},{n:3,lbl:"En UGL",col:"#2563eb",sub:"doc. solicitada al prestador"},{n:4,lbl:"Pend. firma / UTM",col:"#f59e0b",sub:"firma contrato madre · UTM: firma de adenda"},{n:5,lbl:"Adenda firmada",col:"#16a34a"}];
+    var by={1:0,2:0,3:0,4:0,5:0,6:0}, vSI=0,vNO=0,vND=0, t1=0,t2=0,t3=0;
+    var mMail=0,mPendN=0,mRenot=0, mDocu=0,mCons=0,mRecep=0,mPend2=0,mSinResp=0;
+    var mResSi=0,mResCons=0,mResAna=0,mResRech=0, u7=0,u14=0,u21=0,mRn=0;
+    var hoy=new Date();
+    function pf(s){s=String(s||'').trim();if(!s)return null;var m=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);if(!m)return null;var y=parseInt(m[3]);if(y<100)y+=2000;var d=new Date(y,parseInt(m[2])-1,parseInt(m[1]));return isNaN(d.getTime())?null:d;}
+    M.forEach(function(r){
+      by[etapaM69(r)]++;
+      var v=vigente(r); if(v==="SI")vSI++; else if(v==="NO")vNO++; else vND++;
+      var tp=window.__tiempoProceso(r);
+      if(tp.has){ if(tp.dias<=30)t1++; else if(tp.dias<=90)t2++; else t3++; }
+      var mail="";
+      for(var k in r){ if(r.hasOwnProperty(k)){ var ku=ueUp(k); if(ku.indexOf("MAIL COMUNICACION")>=0||(ku.indexOf("NOTIFIC")>=0&&ku.indexOf("MAIL")>=0)){ mail=ueUp(r[k]); break; } } }
+      var mailEnv=(mail.indexOf("ENVIAD")>=0)||(mail.indexOf("RENOTIFIC")>=0);
+      if(mail.indexOf("ENVIAD")>=0) mMail++; else if(mail.indexOf("RENOTIFIC")>=0){mMail++;mRenot++;} else if(mail) mPendN++;
+      var resp=ueUp(G(r,"RESPUESTA UGL")).trim();
+      if(!resp){ if(mailEnv) mSinResp++; }
+      else if(resp.indexOf("CONSULT")>=0) mCons++;
+      else if(resp.indexOf("RECEP")>=0) mRecep++;
+      else if(resp.indexOf("PEND")>=0) mPend2++;
+      else mDocu++;
+      var res=ueUp(G(r,"RESUELTO")).trim();
+      if(res){
+        if(res.indexOf("CONSULT")>=0)mResCons++;
+        else if(res.indexOf("ANALIS")>=0||res.indexOf("PEND")>=0)mResAna++;
+        else if(res.indexOf("RECHAZ")>=0)mResRech++;
+        else if(res.indexOf("SI")>=0||res.indexOf("RESUELT")>=0)mResSi++;
+      }
+      var fi=pf(G(r,"FECHA INICIAL"));
+      if(!resp&&mailEnv&&fi){var dd=Math.round((hoy-fi)/86400000);if(dd>=7&&dd<3650){mRn++;if(dd>=21)u21++;else if(dd>=14)u14++;else u7++;}}
+    });
+    var tot=M.length, firmadas=by[5], neg=by[6];
+    var pctCerr=tot?Math.round(firmadas/tot*100):0;
+    var maxEt=Math.max(by[1],by[2],by[3],by[4],by[5],1);
+    var mResp=mDocu+mCons+mRecep+mPend2, mTotResp=mResp+mSinResp, mTotN=mMail+mPendN;
+    // gestión de firma desagregada en el mundo internación (12 pasos sobre M69)
+    var fCnt={},fNeg=0,fTot=0;
+    for(var fi=0;fi<FIRMA_ETAPAS.length;fi++)fCnt[fi]=0;
+    M.forEach(function(r){
+      if(esDevolucionNegativa(r)){fNeg++;fTot++;return;}
+      var e=etapaFirma(r);
+      if(e>=0){fCnt[e]++;fTot++;}
+    });
+    // cápita de internación (suma sobre el universo M69 vigente; cubierta = cumplimiento pleno)
+    var capTot=0,capCub=0,capNo=0,capConDato=0,capUgl={};
+    if(window.__CAPITA_M69){
+      M.forEach(function(r){
+        var sap=String(G(r,"SAP")||"").trim();
+        if(!sap||window.__CAPITA_M69[sap]==null)return;
+        var c=Number(window.__CAPITA_M69[sap])||0;
+        var pleno=(cumple375(r)==="PLENO");
+        capTot+=c;capConDato++;
+        if(pleno)capCub+=c;else capNo+=c;
+        var u=String(G(r,"UGL")||"").trim()||"—";
+        if(!capUgl[u])capUgl[u]={cub:0,no:0,prest:0};
+        capUgl[u].prest++; if(pleno)capUgl[u].cub+=c; else capUgl[u].no+=c;
+      });
+    }
+    // reconsiderados del mundo internación (universo vigente negativo ∩ M69)
+    var SM=null;
+    if(typeof reconsiderar375==="function"&&typeof esReconsiderable==="function"){
+      var reconM=reconUniverso().filter(function(r){return tieneM69(r);});
+      if(reconM.length) SM=reconStats(reconM);
+    }
+    // hero + embudo
+    var embudo='<div style="display:flex;gap:5px;align-items:flex-end;margin-top:4px;">'+ET.map(function(e){
+      var v=by[e.n], h=Math.max(8,Math.round(v/maxEt*64)), pc=tot?Math.round(v/tot*100):0;
+      return '<div style="flex:1;text-align:center;min-width:0;">'
+        +'<div style="font-size:16px;font-weight:900;color:'+e.col+';line-height:1;">'+nfmt(v)+'</div>'
+        +'<div style="font-size:8px;color:#94a3b8;font-weight:700;">'+pc+'%</div>'
+        +'<div style="height:'+h+'px;background:linear-gradient(180deg,'+e.col+',transparent);border:1px solid '+e.col+';border-bottom:none;border-radius:5px 5px 0 0;margin-top:3px;"></div>'
+        +'<div style="font-size:7.5px;font-weight:800;color:#475569;margin-top:4px;line-height:1.15;">'+esc(e.lbl)+'</div>'
+        +(e.sub?'<div style="font-size:6.5px;font-weight:600;color:#94a3b8;margin-top:1px;line-height:1.2;">'+esc(e.sub)+'</div>':'')
+      +'</div>';
+    }).join("")+'</div>';
+    function mcard(title,ic,col,headN,headSub,inner){
+      return '<div class="big-card" style="border-top:3px solid '+col+';">'
+        +'<div class="big-head" onclick="this.classList.toggle(\'open\');this.nextElementSibling.classList.toggle(\'open\')">'
+          +'<div class="bh-l"><span class="bh-ic" style="background:'+col+'14;color:'+col+';">'+ic+'</span><span class="bh-lbl">'+title+'</span></div>'
+          +'<div class="bh-r"><span class="bh-n" style="color:'+col+';">'+headN+'</span><span class="bh-pct">'+headSub+'</span><i class="fa-solid fa-chevron-down chev"></i></div>'
+        +'</div>'
+        +'<div class="big-detail"><div style="padding-top:10px;">'+inner+'</div></div>'
+      +'</div>';
+    }
+    function band3(a,b2,c2,la,lb,lc,ca,cb,cc,nota){
+      return '<div style="display:flex;gap:8px;margin-bottom:'+(nota?'8':'0')+'px;">'+rmini(a,la,ca)+rmini(b2,lb,cb)+rmini(c2,lc,cc)+'</div>'+(nota?'<div style="font-size:10px;font-weight:700;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:7px 11px;line-height:1.4;">'+nota+'</div>':'');
+    }
+    var html=divider("Internación · Módulo 69")
+      +'<div style="background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:18px;padding:17px 18px;color:#fff;box-shadow:0 8px 24px rgba(30,27,75,.25);margin-bottom:10px;">'
+        +'<div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#a5b4fc;"><span style="display:inline-block;width:6px;height:6px;border-radius:99px;background:#86efac;margin-right:6px;"></span>Población prioritaria · Módulo 69 Internación</div>'
+        +'<div style="display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-top:8px;">'
+          +'<span style="font-size:42px;font-weight:900;line-height:.95;">'+nfmt(tot)+'</span>'
+          +'<span style="font-size:11px;color:rgba(255,255,255,.75);font-weight:700;">prestadores de internación</span>'
+          +'<span style="font-size:15px;font-weight:900;color:#86efac;">'+nfmt(firmadas)+' <span style="font-size:9.5px;font-weight:700;">con adenda firmada</span></span>'
+          +'<span style="margin-left:auto;font-size:11px;font-weight:900;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);border-radius:99px;padding:4px 12px;">'+pctCerr+'% cerrado</span>'
+        +'</div>'
+      +'</div>'
+      +'<div class="big-card" style="border-top:3px solid #2563eb;"><div style="padding:13px 15px;">'
+        +'<div style="font-size:12px;font-weight:900;color:var(--navy);margin-bottom:2px;">📊 Embudo de avance hacia la firma</div>'
+        +'<div style="font-size:9.5px;color:var(--txt3);margin-bottom:8px;">Dónde están hoy los '+nfmt(tot)+' prestadores M69. El cuello de botella es la etapa más cargada antes de la firma.</div>'
+        +embudo
+        +(neg>0?'<div style="margin-top:11px;font-size:10.5px;font-weight:800;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:8px 12px;">⛔ '+nfmt(neg)+' con negativa <span style="font-weight:600;color:#dc2626;">· casos con resultado negativo en curso ('+(tot?Math.round(neg/tot*100):0)+'% del universo internación)</span></div>':'')
+      +'</div></div>'
+      +(function(){
+        if(!capTot&&!capNo)return "";
+        var mes=window.__CAPITA_MES?(" · "+window.__CAPITA_MES):"";
+        var keys=Object.keys(capUgl).sort(function(a,b){return (capUgl[b].cub+capUgl[b].no)-(capUgl[a].cub+capUgl[a].no);}).slice(0,10);
+        var maxT=keys.length?(capUgl[keys[0]].cub+capUgl[keys[0]].no):1;
+        // las 2 UGLs con más cápita descubierta van en rojo intenso
+        var peores=Object.keys(capUgl).sort(function(a,b){return capUgl[b].no-capUgl[a].no;}).slice(0,2);
+        var filas=keys.map(function(u){
+          var d=capUgl[u],t=d.cub+d.no;
+          var wC=t?Math.round(d.cub/maxT*100):0, wN=t?Math.round(d.no/maxT*100):0;
+          var colN=peores.indexOf(u)>=0?"#dc2626":"#ea580c";
+          return '<div style="margin-bottom:9px;">'
+            +'<div style="display:flex;justify-content:space-between;font-size:9.5px;margin-bottom:3px;"><span style="font-weight:900;color:#0d3158;">'+esc(u)+' <span style="font-weight:600;color:#94a3b8;">· '+d.prest+' prest.</span></span><b style="color:#334155;">'+nfmt(t)+'</b></div>'
+            +'<div style="display:flex;height:13px;border-radius:7px;overflow:hidden;background:#f1f5f9;">'
+              +(d.cub>0?'<div style="width:'+Math.max(wC,2)+'%;background:#0d9488;" title="Cubierta: '+nfmt(d.cub)+'"></div>':'')
+              +(d.no>0?'<div style="width:'+Math.max(wN,2)+'%;background:'+colN+';" title="No cubierta: '+nfmt(d.no)+'"></div>':'')
+            +'</div></div>';
+        }).join("");
+        return mcard("Cápita por UGL · cubierta y no cubierta"+mes,'<i class="fa-solid fa-coins"></i>',"#0d9488",nfmt(capTot),"cápita M69",
+          '<div style="font-size:10.5px;color:var(--txt2);line-height:1.5;margin-bottom:10px;">Cápita de internación que concentra cada UGL. En <b style="color:#0d9488;">verde</b> la cubierta (prestadores que cumplen pleno); en <b style="color:#ea580c;">naranja→</b><b style="color:#dc2626;">rojo</b> la no cubierta. El rojo intenso marca las UGLs con más cápita descubierta.</div>'
+          +'<div style="display:flex;gap:8px;margin-bottom:12px;">'+rmini(capCub,"Cápita cubierta","#0d9488")+rmini(capNo,"No cubierta","#ea580c")+rmini(capConDato,"Prest. con dato","#64748b")+'</div>'
+          +filas
+          +(Object.keys(capUgl).length>10?'<div style="font-size:9px;color:#94a3b8;text-align:center;margin-top:4px;">Top 10 UGLs por cápita total · el resto suma en los KPIs de arriba</div>':'')
+        );
+      })()
+      +(fTot>0?mcard("Gestión de firma · internación",'<i class="fa-solid fa-pen-nib"></i>',"#0e7490",nfmt(fTot),"en circuito",
+        '<div style="font-size:10.5px;color:var(--txt2);line-height:1.5;margin-bottom:10px;">Desagregado del tramo final del embudo: dónde está parado cada M69 dentro del caminito de firma. El seguimiento caso por caso está en la solapa Firma.</div>'
+        +'<div class="cam-strip">'+FIRMA_ETAPAS.map(function(e,i){
+          var v=fCnt[i],has=v>0,esF=(e.key==="ADENDA FIRMADA");
+          return '<span class="cam-chip'+(has?'':' z')+(esF&&has?' firm':'')+'" style="--sc:'+e.col+';cursor:default;"><span class="n">'+(i+1)+'</span><span class="l">'+esc(e.lbl)+'</span><span class="v">'+nfmt(v)+'</span></span>';
+        }).join('')
+        +'<span class="cam-chip neg'+(fNeg>0?'':' z')+'" style="--sc:#dc2626;cursor:default;"><span class="n">⛔</span><span class="l">Devolución negativa</span><span class="v">'+nfmt(fNeg)+'</span></span></div>'
+        +(function(){var mI=-1,mV=0;for(var j=0;j<8;j++){if(fCnt[j]>mV){mV=fCnt[j];mI=j;}}return mI>=0?'<div style="margin-top:10px;font-size:10px;font-weight:700;color:#0e7490;background:#ecfeff;border:1px solid #a5f3fc;border-radius:9px;padding:7px 11px;">🔎 Cuello de botella M69: '+esc(FIRMA_ETAPAS[mI].lbl)+' ('+nfmt(mV)+')</div>':'';})()
+      ):"")
+      +mcard("Situación contractual",'<i class="fa-solid fa-file-contract"></i>',"#16a34a",nfmt(vSI),"vigentes",
+        band3(vSI,vNO,vND,"✓ Contrato vigente","Sin vigencia","Sin dato","#16a34a","#d97706","#64748b",
+          vNO>0?nfmt(vNO)+' deben regularizar el contrato madre antes de adherir. Los '+nfmt(vSI)+' vigentes están listos para firmar adenda directo.':"")
+      )
+      +mcard("Tiempo en proceso de internación",'<i class="fa-solid fa-hourglass-half"></i>',"#dc2626",nfmt(t3),"+3 meses",
+        band3(t1,t2,t3,"🟢 Hasta 1 mes","🟡 2 a 3 meses","🔴 Más de 3 meses","#16a34a","#d97706","#dc2626",
+          t3>0?nfmt(t3)+' casos de internación llevan más de 3 meses sin resolver. Son el foco de gestión prioritaria.':"")
+      )
+      +mcard("Notificación y respuesta UGL (M69)",'<i class="fa-solid fa-satellite-dish"></i>',"#0891b2",nfmt(mSinResp),"sin responder",
+        '<div style="display:flex;gap:8px;margin-bottom:8px;">'+rmini(mMail,"📨 Mail enviado"+(mTotN?" · "+Math.round(mMail/mTotN*100)+"%":""),"#0891b2")+rmini(mPendN,"📭 Notificación pendiente","#d97706")+'</div>'
+        +'<div style="display:flex;gap:8px;margin-bottom:8px;">'+rmini(mResp,"Respondieron","#16a34a")+rmini(mPend2,"Pendiente 2da evol.","#64748b")+rmini(mSinResp,"Sin responder","#dc2626")+'</div>'
+        +'<div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">De los que respondieron</div>'
+        +'<div style="display:flex;gap:7px;margin-bottom:8px;">'+rmini(mDocu,"✅ Docu actualizada","#16a34a")+rmini(mCons,"🔁 Consulta documental","#d97706")+rmini(mRecep,"🤝 Confirmó recepción","#0891b2")+'</div>'
+        +'<div style="font-size:9px;font-weight:800;color:#94a3b8;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">Desenlace</div>'
+        +'<div style="display:flex;gap:7px;margin-bottom:'+(mRn>0?'10':'0')+'px;">'+rmini(mResSi,"✔️ Resuelto","#16a34a")+rmini(mResCons,"💬 Consulta resp.","#0891b2")+rmini(mResAna,"⏳ Análisis pend.","#d97706")+rmini(mResRech,"✖️ Rechazado","#dc2626")+'</div>'
+        +(mRn>0?'<div style="background:linear-gradient(135deg,rgba(217,119,6,.07),rgba(220,38,38,.05));border:1.5px solid rgba(217,119,6,.3);border-radius:11px;padding:11px 13px;">'
+          +'<div style="font-size:11.5px;font-weight:900;color:#b45309;margin-bottom:8px;">⚠️ '+nfmt(mRn)+' caso'+(mRn===1?'':'s')+' M69 para re-notificar (+7 días sin respuesta)</div>'
+          +'<div style="display:flex;gap:7px;">'+rmini(u7,"7 a 13 días","#d97706")+rmini(u14,"14 a 20 días","#ea580c")+rmini(u21,"+21 días 🔴","#dc2626")+'</div>'
+          +'<div style="font-size:9px;color:#78716c;margin-top:7px;">El detalle operativo y el copiar por UGL están en la solapa Comunicación.</div>'
+        +'</div>':"")
+      )
+      +(SM?mcard("Reconsideración DI-4 · internación",'<i class="fa-solid fa-scale-balanced"></i>',"#15803d",nfmt(SM.reca),"de "+nfmt(SM.tot),
+        reconInner(SM,"Cruce nuevo: reconsideración por regla modular DI-2026-4 aplicada SOLO al universo negativo vigente de internación M69. Casos prioritarios a recuperar.")
+      ):"");
+    return html;
+  }
+
+  var html=kpiHero()+
+    divider("Indicadores de último estado")+
+    '<p class="sec-note">Último estado de cada prestador en el circuito. Tocá cada bloque para ver su desglose.</p>'+
+    bigCard("<i class=\"fa-solid fa-arrow-trend-up\"></i>","#16a34a","#f0fdf4",nAvanza,"Avanza en el circuito",grupos.avanza)+
+    bigCard("<i class=\"fa-solid fa-folder-open\"></i>","#d97706","#fffbeb",nFalta,"Falta documentación del prestador",grupos.falta)+
+    bigCard("<i class=\"fa-solid fa-hourglass-half\"></i>","#0891b2","#ecfeff",nPend,"Pendiente de evaluación",grupos.pendiente)+
+    bigCard("<i class=\"fa-solid fa-circle-xmark\"></i>","#dc2626","#fef2f2",nNeg,"Cerrado / observado negativo",grupos.negativo)+
+    reconBlock()+
+    divider("Acciones en curso")+
+    '<div class="acc-grid">'+
+      accCard("fa-paper-plane","#f3effe","#7c3aed",acc.pv,"PV enviadas a UTM")+
+      accCard("fa-envelope","#fef6e7","#d97706",acc.mail,"Mails notificación a UGL")+
+      accCard("fa-file-lines","#e6f7fb","#0891b2",acc.nota,"Notas enviadas a UGL")+
+      accCard("fa-file-signature","#e9f9ef","#16a34a",acc.contrato,"Contratos enviados a UGL")+
+      accCard("fa-paper-plane","#f3effe","#7c3aed",acc.pvUgl,"PV enviadas a UGL (firma)")+
+      accCard("fa-wrench","#e6f7fb","#0d9488",acc.viab,"Prestadores con viabilizador POPP")+
+    '</div>'+
+    firmaCard()+
+    cierreCard()+
+    m69Block();
+
+  cont.innerHTML=html;
+}
+
+/* ════ COMUNICACIÓN — réplica mobile del seguimiento comunicacional del visor ════ */
+var COM={est:"all",res:"all"};
+var COM_CASOS=[], COM_RENOTIF=[], COM_PORUGL={};
+function comChip(lbl,col){return lbl?'<span style="display:inline-block;font-size:9px;font-weight:800;color:'+col+';background:'+col+'14;border:1px solid '+col+'33;border-radius:6px;padding:2px 7px;">'+esc(lbl)+'</span>':'<span style="font-size:9.5px;color:#cbd5e1;">—</span>';}
+function buildCom(){
+  var cont=document.getElementById("comContent");
+  if(!cont) return;
+  if(!DATA.length){return;}
+  var notifEnv=0,notifPend=0,notifRenot=0;
+  var respDocu=0,respConsulta=0,respRecep=0,respPend=0,sinResp=0;
+  var resSi=0,resConsResp=0,resAnalisis=0,resRech=0;
+  COM_CASOS=[];COM_RENOTIF=[];COM_PORUGL={};
+  var hoy=new Date();
+  function pf(s){s=String(s||'').trim();if(!s)return null;var m=s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{2,4})/);if(!m)return null;var y=parseInt(m[3]);if(y<100)y+=2000;var d=new Date(y,parseInt(m[2])-1,parseInt(m[1]));return isNaN(d.getTime())?null:d;}
+  DATA.forEach(function(r,ri){
+    // notificación inicial (mail): ENVIADA / RENOTIFICADA / PENDIENTE — misma lectura que el visor
+    var mail="";
+    for(var k in r){ if(r.hasOwnProperty(k)){ var ku=ueUp(k); if(ku.indexOf("MAIL COMUNICACION")>=0||(ku.indexOf("NOTIFIC")>=0&&ku.indexOf("MAIL")>=0)){ mail=ueUp(r[k]); break; } } }
+    var mailEnviada=(mail.indexOf("ENVIAD")>=0)||(mail.indexOf("RENOTIFIC")>=0);
+    if(mail.indexOf("ENVIAD")>=0) notifEnv++; else if(mail.indexOf("RENOTIFIC")>=0){notifEnv++;notifRenot++;} else if(mail) notifPend++;
+    var resp=ueUp(G(r,"RESPUESTA UGL")).trim();
+    var res=ueUp(G(r,"RESUELTO")).trim();
+    var rLabel="",rCol="",rTipo="";
+    // CLASIFICACIÓN: vacío = NO respondió (verdadera no-respuesta) · PENDIENTE = respondió inicial, falta 2da evolución
+    if(!resp){ if(mailEnviada) sinResp++; rTipo="sinresp"; }
+    else {
+      if(resp.indexOf("CONSULT")>=0){respConsulta++;rLabel="Consulta documental";rCol="#d97706";rTipo="consulta";}
+      else if(resp.indexOf("RECEP")>=0){respRecep++;rLabel="Confirmó recepción";rCol="#0891b2";rTipo="recep";}
+      else if(resp.indexOf("DOCU")>=0||resp.indexOf("ACTUALIZ")>=0){respDocu++;rLabel="Docu actualizada";rCol="#16a34a";rTipo="docu";}
+      else if(resp.indexOf("PEND")>=0){respPend++;rLabel="Pendiente";rCol="#64748b";rTipo="pend";}
+      else {respDocu++;rLabel="Docu actualizada";rCol="#16a34a";rTipo="docu";}
+    }
+    var zLabel="",zCol="",zTipo="";
+    if(res){
+      if(res.indexOf("CONSULT")>=0){resConsResp++;zLabel="Consulta respondida";zCol="#0891b2";zTipo="consresp";}
+      else if(res.indexOf("ANALIS")>=0||res.indexOf("PEND")>=0){resAnalisis++;zLabel="Análisis pendiente";zCol="#d97706";zTipo="analisis";}
+      else if(res.indexOf("RECHAZ")>=0){resRech++;zLabel="Rechazado";zCol="#dc2626";zTipo="rech";}
+      else if(res.indexOf("SI")>=0||res.indexOf("RESUELT")>=0){resSi++;zLabel="Resuelto";zCol="#16a34a";zTipo="resuelto";}
+    }
+    // re-notificar = SIN respuesta (vacío) + mail enviado hace +7 días
+    var fi=pf(G(r,"FECHA INICIAL"));
+    if(!resp && mailEnviada && fi){var dd=Math.round((hoy-fi)/86400000);if(dd>=7&&dd<3650){COM_RENOTIF.push({prest:String(G(r,"PRESTADOR")||"—"),ugl:String(G(r,"UGL")||""),sap:String(G(r,"SAP")||""),legajo:String(G(r,"LEGAJO")||G(r,"N_LEGAJO")||"").trim(),m69:tieneM69(r),dias:dd});}}
+    // detalle: universo = solo casos CON comunicación enviada (los 167 notificados)
+    if(mailEnviada){
+      COM_CASOS.push({prest:String(G(r,"PRESTADOR")||"—"),sap:String(G(r,"SAP")||""),ugl:String(G(r,"UGL")||""),rLabel:rLabel,rCol:rCol,rTipo:rTipo,zLabel:zLabel,zCol:zCol,zTipo:zTipo,sinResp:!resp,_idx:ri});
+    }
+  });
+  COM_RENOTIF.sort(function(a,b){return b.dias-a.dias;});
+  COM_RENOTIF.forEach(function(c){var k=c.ugl||"(sin UGL)";if(!COM_PORUGL[k])COM_PORUGL[k]=[];COM_PORUGL[k].push(c);});
+  var respondieron=respDocu+respConsulta+respRecep+respPend;
+  var totResp=respondieron+sinResp;
+  var totRes=resSi+resConsResp+resAnalisis+resRech;
+  var totNotif=notifEnv+notifPend;
+  var pctEnv=totNotif?Math.round(notifEnv/totNotif*100):0;
+  function dv(txt){return '<div class="divider"><div class="ln"></div><div class="vx">'+txt+'</div><div class="ln"></div></div>';}
+  function k3(n,lbl,col,tot){return '<div style="flex:1;text-align:center;background:'+col+'10;border:1px solid '+col+'40;border-radius:13px;padding:13px 5px;"><div style="font-size:24px;font-weight:900;color:'+col+';line-height:1;">'+nfmt(n)+'</div><div style="font-size:9px;font-weight:800;color:'+col+';margin-top:4px;line-height:1.2;">'+lbl+(tot?' · '+Math.round(n/tot*100)+'%':'')+'</div></div>';}
+  function mini(ico,n,lbl,col,tot){return '<div style="flex:1;min-width:90px;text-align:center;background:'+col+'0d;border:1px solid '+col+'33;border-top:3px solid '+col+';border-radius:11px;padding:11px 4px;"><div style="font-size:18px;font-weight:900;color:'+col+';line-height:1;">'+ico+' '+nfmt(n)+'</div><div style="font-size:8.5px;font-weight:800;color:'+col+';margin-top:4px;line-height:1.2;">'+lbl+(tot?' · '+Math.round(n/tot*100)+'%':'')+'</div></div>';}
+  // ── panel re-notificación (casos sin responder +7 días) ──
+  function rnPanel(){
+    if(!COM_RENOTIF.length){
+      return '<div style="background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:14px;padding:16px;display:flex;gap:12px;align-items:center;"><span style="font-size:24px;">✅</span><div><div style="font-size:13px;font-weight:900;color:#15803d;">Sin casos para re-notificar</div><div style="font-size:10.5px;color:#64748b;margin-top:2px;">No hay notificaciones sin respuesta de la UGL con más de 7 días.</div></div></div>';
+    }
+    var u7=0,u14=0,u21=0;
+    COM_RENOTIF.forEach(function(c){if(c.dias>=21)u21++;else if(c.dias>=14)u14++;else u7++;});
+    var uglKeys=Object.keys(COM_PORUGL).sort(function(a,b){return COM_PORUGL[b].length-COM_PORUGL[a].length;});
+    function band(n,lbl,col){return '<div style="flex:1;min-width:80px;text-align:center;background:'+col+'12;border:1px solid '+col+'40;border-radius:10px;padding:10px 4px;"><div style="font-size:19px;font-weight:900;color:'+col+';line-height:1;">'+nfmt(n)+'</div><div style="font-size:8px;font-weight:800;color:'+col+';margin-top:3px;">'+lbl+'</div></div>';}
+    var tabla='<div id="comRnTabla" style="display:block;max-height:300px;overflow-y:auto;background:#fff;border:1px solid #fde68a;border-radius:10px;">'
+      +'<table style="width:100%;border-collapse:collapse;font-size:11px;">'
+      +'<thead><tr style="background:#fef3c7;position:sticky;top:0;">'
+        +'<th style="text-align:left;padding:7px 9px;font-size:8.5px;font-weight:800;color:#92400e;text-transform:uppercase;">UGL</th>'
+        +'<th style="text-align:left;padding:7px 9px;font-size:8.5px;font-weight:800;color:#92400e;text-transform:uppercase;">Prestador</th>'
+        +'<th style="text-align:center;padding:7px 9px;font-size:8.5px;font-weight:800;color:#92400e;text-transform:uppercase;">Días</th>'
+      +'</tr></thead><tbody>'
+      +COM_RENOTIF.map(function(c,i){
+        var col=c.dias>=21?'#dc2626':(c.dias>=14?'#ea580c':'#d97706');
+        return '<tr style="background:'+(i%2?'#fffbeb':'#fff')+';border-bottom:1px solid #fef3c7;">'
+          +'<td style="padding:7px 9px;color:#475569;font-weight:700;font-size:10px;">'+esc(c.ugl||'—')+'</td>'
+          +'<td style="padding:7px 9px;font-weight:700;color:#1e293b;font-size:10.5px;">'+(c.m69?'<span style="color:#7c3aed;">🏥 </span>':'')+esc(c.prest)+(c.legajo?'<div style="font-size:8.5px;color:#94a3b8;">Leg. '+esc(c.legajo)+'</div>':'')+'</td>'
+          +'<td style="padding:7px 9px;text-align:center;"><span style="font-weight:900;color:'+col+';background:'+col+'14;border-radius:6px;padding:2px 8px;font-size:10.5px;">'+c.dias+'</span></td></tr>';
+      }).join('')+'</tbody></table></div>';
+    var porUgl='<div id="comRnUgl" style="display:none;max-height:300px;overflow-y:auto;">'
+      +uglKeys.map(function(k){
+        var lista=COM_PORUGL[k];
+        var maxD=Math.max.apply(null,lista.map(function(x){return x.dias;}));
+        var colU=maxD>=21?'#dc2626':(maxD>=14?'#ea580c':'#d97706');
+        return '<div style="background:#fff;border:1px solid #fde68a;border-radius:10px;padding:11px 12px;margin-bottom:8px;">'
+          +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;gap:8px;">'
+            +'<span style="font-size:12px;font-weight:900;color:#0d3158;">🏢 '+esc(k)+'</span>'
+            +'<div style="display:flex;align-items:center;gap:6px;">'
+              +'<span style="font-size:10.5px;font-weight:900;color:'+colU+';background:'+colU+'14;border-radius:7px;padding:2px 9px;">'+lista.length+'</span>'
+              +'<button onclick="comCopiarUGL(this,\''+encodeURIComponent(k)+'\')" style="border:1.5px solid #d97706;background:#d97706;color:#fff;padding:4px 10px;font-size:9.5px;font-weight:800;border-radius:7px;cursor:pointer;white-space:nowrap;font-family:inherit;">📋 Copiar</button>'
+            +'</div></div>'
+          +'<div>'+lista.map(function(c){return '<div style="display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:4px 0;border-top:1px solid #f8f4e8;"><span style="color:#334155;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+(c.m69?'<span style="color:#7c3aed;font-weight:900;">🏥 </span>':'')+'<b style="color:#0d3158;">'+esc(c.legajo||'—')+'</b> · '+esc(c.prest)+'</span><span style="flex-shrink:0;font-weight:800;color:'+(c.dias>=21?'#dc2626':(c.dias>=14?'#ea580c':'#d97706'))+';">'+c.dias+'d</span></div>';}).join('')+'</div></div>';
+      }).join('')+'</div>';
+    return '<div style="background:linear-gradient(135deg,rgba(217,119,6,.07),rgba(220,38,38,.05));border:1.5px solid rgba(217,119,6,.3);border-radius:14px;padding:15px 16px;">'
+      +'<div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;"><span style="font-size:21px;">⚠️</span><span style="font-size:14px;font-weight:900;color:#b45309;">'+nfmt(COM_RENOTIF.length)+' caso'+(COM_RENOTIF.length===1?'':'s')+' para re-notificar</span></div>'
+      +'<div style="font-size:10px;color:#78716c;margin-bottom:12px;line-height:1.4;">Casos notificados que siguen sin respuesta de la UGL pasados 7 días desde el aviso inicial. Corresponde reenviar la notificación.</div>'
+      +'<div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">'+band(u7,'7 a 13 días','#d97706')+band(u14,'14 a 20 días','#ea580c')+band(u21,'+21 días 🔴','#dc2626')+'</div>'
+      +'<button onclick="comToggleRn(this)" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border:1px dashed #f59e0b;border-radius:10px;background:rgba(245,158,11,.05);color:#b45309;font-size:12px;font-weight:800;cursor:pointer;font-family:inherit;"><span class="rnTxt">Ver detalle de casos</span><span class="rnChev" style="font-size:13px;">▸</span></button>'
+      +'<div id="comRnDet" style="display:none;margin-top:11px;">'
+        +'<div style="display:flex;gap:6px;margin-bottom:9px;">'
+          +'<button id="comVbtnT" class="sc-btn on" onclick="comVista(\'tabla\')" style="border-color:#f59e0b;">📋 Por caso</button>'
+          +'<button id="comVbtnU" class="sc-btn" onclick="comVista(\'ugl\')" style="border-color:#f59e0b;">🏢 Por UGL</button>'
+        +'</div>'+tabla+porUgl
+      +'</div></div>';
+  }
+  // ── UGLs del detalle ──
+  var uset={};COM_CASOS.forEach(function(c){if(c.ugl)uset[c.ugl]=(uset[c.ugl]||0)+1;});
+  var uglOpts='<option value="">Todas las UGL</option>'+Object.keys(uset).sort(function(a,b){return uglNum(a)-uglNum(b);}).map(function(u){return '<option value="'+esc(u)+'">'+esc(u)+' ('+uset[u]+')</option>';}).join('');
+  var html=''
+    +'<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin-bottom:7px;">'
+      +'<div style="font-size:13px;font-weight:900;color:var(--navy);">📡 Cobertura de notificación inicial</div>'
+      +'<div style="font-size:10.5px;font-weight:800;color:#0891b2;background:#ecfeff;border:1px solid #a5f3fc;border-radius:99px;padding:5px 12px;">'+pctEnv+'% · '+nfmt(notifEnv)+'/'+nfmt(totNotif)+'</div>'
+    +'</div>'
+    +'<div style="height:10px;background:#e2e8f0;border-radius:6px;overflow:hidden;display:flex;margin-bottom:13px;"><div style="width:'+pctEnv+'%;background:linear-gradient(90deg,#0891b2,#22d3ee);"></div></div>'
+    +'<div style="text-align:center;background:linear-gradient(135deg,rgba(8,145,178,.07),rgba(34,211,238,.05));border:1px solid rgba(8,145,178,.25);border-radius:14px;padding:15px;margin-bottom:12px;">'
+      +'<div style="font-size:32px;font-weight:900;color:#0891b2;line-height:1;">'+nfmt(notifEnv)+'</div>'
+      +'<div style="font-size:10.5px;font-weight:800;color:#0e7490;margin-top:5px;">Notificaciones enviadas a las UGL</div>'
+      +(notifRenot>0?'<div style="font-size:9px;color:#b45309;margin-top:4px;font-weight:700;">↻ incluye '+nfmt(notifRenot)+' renotificada'+(notifRenot===1?'':'s')+'</div>':'')
+    +'</div>'
+    +'<div style="display:flex;gap:8px;margin-bottom:6px;">'
+      +k3(respondieron,'Respondieron','#16a34a',totResp)
+      +k3(respPend,'Pendiente 2da evol.','#64748b',totResp)
+      +k3(sinResp,'Sin responder','#dc2626',totResp)
+    +'</div>'
+    +'<p class="sec-note" style="margin-top:8px;">Universo = notificados con mail enviado. <b>Sin responder</b> = notificado con respuesta vacía (los casos nunca notificados no cuentan).</p>'
+    +dv('De los que respondieron, qué dijeron')
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+      +mini('✅',respDocu,'Docu actualizada','#16a34a',respondieron)
+      +mini('🔁',respConsulta,'Consulta documental','#d97706',respondieron)
+      +mini('🤝',respRecep,'Confirmó recepción','#0891b2',respondieron)
+    +'</div>'
+    +dv('Desenlace')
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;">'
+      +mini('✔️',resSi,'Resuelto','#16a34a',totRes)
+      +mini('💬',resConsResp,'Consulta respondida','#0891b2',totRes)
+      +mini('⏳',resAnalisis,'Análisis pendiente','#d97706',totRes)
+      +mini('✖️',resRech,'Rechazado','#dc2626',totRes)
+    +'</div>'
+    +dv('Casos sin responder · re-notificación')
+    +rnPanel()
+    +dv('Detalle de casos comunicados')
+    +'<div style="background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 5px rgba(13,31,74,.05);">'
+      +'<div style="padding:11px 14px;background:linear-gradient(135deg,#0d3158,#225bb0);color:#fff;display:flex;align-items:center;justify-content:space-between;gap:8px;">'
+        +'<span style="font-size:12px;font-weight:900;">🗂️ Estado de respuesta</span>'
+        +'<span id="comCount" style="font-size:10px;font-weight:800;background:rgba(255,255,255,.16);border-radius:99px;padding:3px 10px;"></span>'
+      +'</div>'
+      +'<div style="padding:10px 12px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;flex-direction:column;gap:8px;">'
+        +'<input id="comQ" type="text" placeholder="🔍 Buscar prestador, SAP, UGL, estado…" oninput="comFiltrar()" style="width:100%;box-sizing:border-box;padding:9px 13px;border:1.5px solid #c5d3e6;border-radius:10px;font-size:13px;outline:none;color:#1e293b;font-family:inherit;"/>'
+        +'<select id="comUgl" class="ugl-sel" onchange="comFiltrar()" style="width:100%;">'+uglOpts+'</select>'
+        +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
+          +'<span style="font-size:8.5px;font-weight:800;color:#94a3b8;text-transform:uppercase;">Respuesta:</span>'
+          +'<button class="sc-btn on" onclick="comSetEst(\'all\',this)">Todas</button>'
+          +'<button class="sc-btn" onclick="comSetEst(\'respondio\',this)">✅ Respondieron</button>'
+          +'<button class="sc-btn" onclick="comSetEst(\'pendiente\',this)">⏳ Pendiente</button>'
+          +'<button class="sc-btn" onclick="comSetEst(\'sinresp\',this)">❌ Sin responder</button>'
+        +'</div>'
+        +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
+          +'<span style="font-size:8.5px;font-weight:800;color:#94a3b8;text-transform:uppercase;">Resol:</span>'
+          +'<button class="sc-btn on" onclick="comSetRes(\'all\',this)">Todas</button>'
+          +'<button class="sc-btn" onclick="comSetRes(\'resuelto\',this)">✔️ Resuelto</button>'
+          +'<button class="sc-btn" onclick="comSetRes(\'noresuelto\',this)">○ No resuelto</button>'
+        +'</div>'
+      +'</div>'
+      +'<div style="max-height:420px;overflow-y:auto;"><table style="width:100%;border-collapse:collapse;">'
+        +'<thead><tr style="background:#f1f5f9;position:sticky;top:0;z-index:2;"><th style="text-align:left;padding:8px 10px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Prestador</th><th style="padding:8px 6px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Respuesta</th><th style="padding:8px 6px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Resolución</th></tr></thead>'
+        +'<tbody id="comTbody"></tbody></table></div>'
+    +'</div>';
+  cont.innerHTML=html;
+  comFiltrar();
+}
+function comFiltrar(){
+  var q=up((document.getElementById("comQ")||{}).value||"");
+  var ugl=(document.getElementById("comUgl")||{}).value||"";
+  var list=COM_CASOS.filter(function(c){
+    if(ugl&&c.ugl!==ugl)return false;
+    var er=(c.rTipo==="pend")?"pendiente":(c.sinResp?"sinresp":"respondio");
+    if(COM.est!=="all"&&er!==COM.est)return false;
+    if(COM.res==="resuelto"&&c.zTipo!=="resuelto")return false;
+    if(COM.res==="noresuelto"&&c.zTipo==="resuelto")return false;
+    if(q){var blob=up(c.prest+" "+c.sap+" "+c.ugl+" "+(c.rLabel||(c.sinResp?"SIN RESPUESTA":""))+" "+(c.zLabel||""));if(blob.indexOf(q)<0)return false;}
+    return true;
+  });
+  var cntEl=document.getElementById("comCount");
+  if(cntEl)cntEl.textContent=nfmt(list.length)+" de "+nfmt(COM_CASOS.length);
+  var tb=document.getElementById("comTbody");
+  if(!tb)return;
+  if(!list.length){tb.innerHTML='<tr><td colspan="3" style="padding:22px;text-align:center;color:#94a3b8;font-size:12px;">Ningún caso coincide con los filtros.</td></tr>';return;}
+  tb.innerHTML=list.map(function(c){
+    var rShow=c.sinResp?comChip("Sin respuesta","#dc2626"):comChip(c.rLabel,c.rCol);
+    return '<tr onclick="abrirFicha('+c._idx+')" style="border-bottom:1px solid #eef2f8;cursor:pointer;">'
+      +'<td style="padding:9px 10px;font-size:11px;font-weight:700;color:#0d3158;">'+esc(c.prest)+'<div style="font-size:8.5px;color:#94a3b8;font-weight:600;">SAP '+esc(c.sap)+(c.ugl?' · '+esc(c.ugl):'')+'</div></td>'
+      +'<td style="padding:9px 6px;text-align:center;">'+rShow+'</td>'
+      +'<td style="padding:9px 6px;text-align:center;">'+comChip(c.zLabel,c.zCol)+'</td></tr>';
+  }).join("");
+}
+function comSetEst(v,btn){COM.est=v;comMark(btn);comFiltrar();}
+function comSetRes(v,btn){COM.res=v;comMark(btn);comFiltrar();}
+function comMark(btn){[].forEach.call(btn.parentElement.querySelectorAll(".sc-btn"),function(b){b.classList.remove("on");});btn.classList.add("on");}
+function comVista(v){
+  document.getElementById("comRnTabla").style.display=(v==="tabla")?"block":"none";
+  document.getElementById("comRnUgl").style.display=(v==="ugl")?"block":"none";
+  document.getElementById("comVbtnT").classList.toggle("on",v==="tabla");
+  document.getElementById("comVbtnU").classList.toggle("on",v==="ugl");
+}
+function comToggleRn(btn){
+  var p=document.getElementById("comRnDet");
+  var ab=p.style.display!=="none";
+  p.style.display=ab?"none":"block";
+  btn.querySelector(".rnTxt").textContent=ab?"Ver detalle de casos":"Ocultar detalle";
+  btn.querySelector(".rnChev").textContent=ab?"▸":"▾";
+}
+function comCopiarUGL(btn,uglEnc){
+  var k=decodeURIComponent(uglEnc);
+  var lista=COM_PORUGL[k]||[];
+  if(!lista.length)return;
+  var txt=lista.map(function(c){return (c.legajo||'')+'\t'+(c.prest||'')+'\t'+(c.dias!=null?c.dias+' días':'');}).join('\n');
+  var done=function(){var o=btn.innerHTML;btn.innerHTML='✓ Copiado';setTimeout(function(){btn.innerHTML=o;},1500);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(function(){done();});}
+  else{var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();}
+}
+
+/* ════ GESTIÓN DE FIRMA — tabla de seguimiento + escalera del caminito ════ */
+var FIRMA_F={q:"",ugl:"",etapa:-99,sort:"etapa"};
+var FIRMA_ROWS=[];
+function buildFirma(){
+  var cont=document.getElementById("firmaContent");
+  if(!cont)return;
+  if(!DATA.length){cont.innerHTML="";return;}
+  // universo: casos en el caminito de firma (chip Intervención-C / último estado) + devoluciones negativas
+  // dedup SAP+UGL (primera fila por combinación, igual al criterio de tabla del visor)
+  var vistos={};FIRMA_ROWS=[];
+  DATA.forEach(function(r,ri){
+    var neg=esDevolucionNegativa(r);
+    var et=etapaFirma(r);
+    if(et<0&&!neg)return;
+    var k=String(G(r,"SAP")).toUpperCase().trim()+"||"+String(G(r,"UGL")).toUpperCase().trim();
+    if(vistos[k])return;vistos[k]=1;
+    var tp=window.__tiempoProceso(r);
+    FIRMA_ROWS.push({ri:ri,prest:String(G(r,"PRESTADOR")||"—"),sap:String(G(r,"SAP")||""),ugl:String(G(r,"UGL")||""),et:neg?-1:et,neg:neg,dias:tp.has?tp.dias:null});
+  });
+  // UGLs presentes en el circuito
+  var uset={};FIRMA_ROWS.forEach(function(c){if(c.ugl)uset[c.ugl]=(uset[c.ugl]||0)+1;});
+  var uglOpts='<option value="">Todas las UGL</option>'+Object.keys(uset).sort(function(a,b){return uglNum(a)-uglNum(b);}).map(function(u){return '<option value="'+esc(u)+'">'+esc(u)+' ('+uset[u]+')</option>';}).join('');
+  cont.innerHTML=''
+    +'<div style="background:linear-gradient(135deg,#0e7490,#14b8a6);border-radius:18px;padding:16px 18px;color:#fff;box-shadow:0 8px 24px rgba(8,145,178,.28);margin-bottom:12px;">'
+      +'<div style="font-size:9px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;opacity:.85;">✍️ Gestión de firma de adenda</div>'
+      +'<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-top:7px;">'
+        +'<span style="font-size:38px;font-weight:900;line-height:.95;" id="fiTot"></span>'
+        +'<span style="font-size:11px;opacity:.85;font-weight:700;">casos en el circuito</span>'
+        +'<span style="margin-left:auto;font-size:10.5px;font-weight:800;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:99px;padding:4px 12px;" id="fiCuello"></span>'
+      +'</div>'
+    +'</div>'
+    +'<div class="divider"><div class="ln"></div><div class="vx">El caminito · tocá una etapa para filtrar</div><div class="ln"></div></div>'
+    +'<div class="stairs" id="fiStairs"></div>'
+    +'<div class="divider"><div class="ln"></div><div class="vx">Tabla de seguimiento</div><div class="ln"></div></div>'
+    +'<div style="background:var(--surf);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 1px 5px rgba(13,31,74,.05);">'
+      +'<div style="padding:10px 12px;background:#f8fafc;border-bottom:1px solid #e2e8f0;display:flex;flex-direction:column;gap:8px;">'
+        +'<input id="fiQ" type="text" placeholder="🔍 Buscar prestador, SAP, UGL…" oninput="firmaFiltrar()" style="width:100%;box-sizing:border-box;padding:9px 13px;border:1.5px solid #c5d3e6;border-radius:10px;font-size:13px;outline:none;color:#1e293b;font-family:inherit;"/>'
+        +'<select id="fiUgl" class="ugl-sel" onchange="firmaFiltrar()" style="width:100%;">'+uglOpts+'</select>'
+        +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;">'
+          +'<span style="font-size:8.5px;font-weight:800;color:#94a3b8;text-transform:uppercase;">Ordenar:</span>'
+          +'<button class="sc-btn fiSort on" data-s="etapa" onclick="firmaSort(this)">🪜 Etapa</button>'
+          +'<button class="sc-btn fiSort" data-s="dias" onclick="firmaSort(this)">⏱ Días</button>'
+          +'<button class="sc-btn fiSort" data-s="ugl" onclick="firmaSort(this)">📍 UGL</button>'
+          +'<span id="fiCount" style="font-size:10px;font-weight:800;color:var(--txt2);margin-left:auto;"></span>'
+        +'</div>'
+        +'<div id="fiEtChip" style="display:none;"></div>'
+      +'</div>'
+      +'<div style="max-height:460px;overflow-y:auto;"><table style="width:100%;border-collapse:collapse;">'
+        +'<thead><tr style="background:#f1f5f9;position:sticky;top:0;z-index:2;"><th style="text-align:left;padding:8px 10px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Prestador</th><th style="padding:8px 6px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Etapa</th><th style="padding:8px 6px;font-size:8.5px;font-weight:800;color:#64748b;text-transform:uppercase;">Días</th></tr></thead>'
+        +'<tbody id="fiTbody"></tbody></table></div>'
+    +'</div>';
+  firmaStairs();
+  firmaFiltrar();
+}
+function firmaStairs(){
+  var box=document.getElementById("fiStairs");
+  if(!box)return;
+  var cnt={},cntNeg=0;
+  for(var i=0;i<FIRMA_ETAPAS.length;i++)cnt[i]=0;
+  FIRMA_ROWS.forEach(function(c){if(c.neg)cntNeg++;else if(cnt[c.et]!=null)cnt[c.et]++;});
+  box.className="cam-strip";
+  box.innerHTML=FIRMA_ETAPAS.map(function(e,i){
+    var v=cnt[i],has=v>0,on=(FIRMA_F.etapa===i);
+    var esFirm=(e.key==="ADENDA FIRMADA");
+    var cls="cam-chip"+(has?"":" z")+(esFirm&&has?" firm":"")+(on?" on":"");
+    return '<span class="'+cls+'" style="--sc:'+e.col+';" onclick="firmaEtapa('+i+')">'
+      +'<span class="n">'+(i+1)+'</span><span class="l">'+esc(e.lbl)+'</span><span class="v">'+nfmt(v)+'</span></span>';
+  }).join("")
+  +'<span class="cam-chip neg'+(cntNeg>0?"":" z")+(FIRMA_F.etapa===-1?" on":"")+'" style="--sc:#dc2626;" onclick="firmaEtapa(-1)"><span class="n">⛔</span><span class="l">Devolución negativa</span><span class="v">'+nfmt(cntNeg)+'</span></span>';
+  var tot=FIRMA_ROWS.length;
+  var te=document.getElementById("fiTot");if(te)te.textContent=nfmt(tot);
+  var maxI=-1,maxV=0;
+  for(var j=0;j<8;j++){if(cnt[j]>maxV){maxV=cnt[j];maxI=j;}}
+  var ce=document.getElementById("fiCuello");
+  if(ce)ce.textContent=maxI>=0?("Cuello de botella: "+FIRMA_ETAPAS[maxI].lbl+" ("+nfmt(maxV)+")"):"";
+}
+function firmaEtapa(i){
+  FIRMA_F.etapa=(FIRMA_F.etapa===i)?-99:i;
+  firmaStairs();firmaFiltrar();
+}
+function firmaSort(btn){
+  FIRMA_F.sort=btn.getAttribute("data-s");
+  [].forEach.call(document.querySelectorAll(".fiSort"),function(b){b.classList.remove("on");});
+  btn.classList.add("on");
+  firmaFiltrar();
+}
+function firmaFiltrar(){
+  var q=up((document.getElementById("fiQ")||{}).value||"");
+  var ugl=(document.getElementById("fiUgl")||{}).value||"";
+  var list=FIRMA_ROWS.filter(function(c){
+    if(ugl&&c.ugl!==ugl)return false;
+    if(FIRMA_F.etapa!==-99){
+      if(FIRMA_F.etapa===-1){if(!c.neg)return false;}
+      else if(c.neg||c.et!==FIRMA_F.etapa)return false;
+    }
+    if(q){var blob=up(c.prest+" "+c.sap+" "+c.ugl);if(blob.indexOf(q)<0)return false;}
+    return true;
+  });
+  if(FIRMA_F.sort==="dias")list.sort(function(a,b){return (b.dias==null?-1:b.dias)-(a.dias==null?-1:a.dias);});
+  else if(FIRMA_F.sort==="ugl")list.sort(function(a,b){var na=uglNum(a.ugl),nb=uglNum(b.ugl);if(na!==nb)return na-nb;return a.prest.localeCompare(b.prest,"es");});
+  else list.sort(function(a,b){var ea=a.neg?99:a.et,eb=b.neg?99:b.et;if(ea!==eb)return ea-eb;return (b.dias==null?-1:b.dias)-(a.dias==null?-1:a.dias);});
+  var cntEl=document.getElementById("fiCount");
+  if(cntEl)cntEl.textContent=nfmt(list.length)+" de "+nfmt(FIRMA_ROWS.length);
+  // chip de etapa activa
+  var chipBox=document.getElementById("fiEtChip");
+  if(chipBox){
+    if(FIRMA_F.etapa===-99){chipBox.style.display="none";chipBox.innerHTML="";}
+    else{
+      var lbl=FIRMA_F.etapa===-1?"Devolución negativa":((FIRMA_F.etapa+1)+" · "+FIRMA_ETAPAS[FIRMA_F.etapa].lbl);
+      chipBox.style.display="";
+      chipBox.innerHTML='<span class="f-tag">Etapa: '+esc(lbl)+' <b onclick="firmaEtapa(-99)">✕</b></span>';
+    }
+  }
+  var tb=document.getElementById("fiTbody");
+  if(!tb)return;
+  if(!list.length){tb.innerHTML='<tr><td colspan="3" style="padding:22px;text-align:center;color:#94a3b8;font-size:12px;">Ningún caso coincide con los filtros.</td></tr>';return;}
+  tb.innerHTML=list.map(function(c){
+    var col=c.neg?"#dc2626":FIRMA_ETAPAS[c.et].col;
+    var etTxt=c.neg?"⛔ Devolución negativa":((c.et+1)+" · "+FIRMA_ETAPAS[c.et].lbl);
+    var dd;
+    if(c.dias==null)dd='<span style="color:#cbd5e1;font-size:11px;">—</span>';
+    else{var dc=c.dias<=30?"#16a34a":(c.dias<=90?"#d97706":"#dc2626");dd='<span style="display:inline-block;font-weight:900;color:'+dc+';background:'+dc+'14;border-radius:99px;padding:3px 9px;font-size:10.5px;white-space:nowrap;">'+c.dias+'d</span>';}
+    return '<tr onclick="abrirFicha('+c.ri+')" style="border-bottom:1px solid #eef2f8;cursor:pointer;">'
+      +'<td style="padding:9px 10px;font-size:11px;font-weight:700;color:#0d3158;">'+esc(c.prest)+'<div style="font-size:8.5px;color:#94a3b8;font-weight:600;">SAP '+esc(c.sap)+(c.ugl?' · '+esc(c.ugl):'')+'</div></td>'
+      +'<td style="padding:9px 6px;text-align:center;"><span class="et-badge" style="--ec:'+col+';color:'+col+';border-color:'+col+';">'+etTxt+'</span></td>'
+      +'<td style="padding:9px 6px;text-align:center;">'+dd+'</td></tr>';
+  }).join("");
+}
+
+/* ════ VISTA ESCRITORIO / CELULAR (misma app, dos layouts) ════ */
+function aplicarVista(v){
+  document.body.classList.toggle("dk",v==="dk");
+  var b=document.getElementById("vistaBtn");
+  if(b){
+    b.innerHTML=(v==="dk")?'<i class="fa-solid fa-mobile-screen-button"></i>':'<i class="fa-solid fa-desktop"></i>';
+    b.title=(v==="dk")?"Cambiar a vista celular":"Cambiar a vista escritorio";
+  }
+}
+function toggleVista(){
+  var v=document.body.classList.contains("dk")?"mb":"dk";
+  try{localStorage.setItem("c375_vista",v);}catch(e){}
+  aplicarVista(v);
+}
+function initVista(){
+  var v=null;
+  try{v=localStorage.getItem("c375_vista");}catch(e){}
+  if(v!=="dk"&&v!=="mb") v=(window.innerWidth>=900?"dk":"mb"); // auto según pantalla
+  aplicarVista(v);
+}
+
+/* ════ PORTÓN DE ACCESO — la clave define el PERFIL (hash SHA-256, candado operativo) ════ */
+// gestion375 → perfil gestión (4 solapas) · ver375 → perfil consulta (oculta Firma y Comunicación) · admin375 → todo
+var AUTH_ROLES={
+  "57cb41b34795639caa70d8e9b375e8a7797d43be7c236f194d0acb81ea2d7638":"gestion",  // gestion375
+  "794d7ccbf9c3178edc835fb16a2c596f472f8d38a4f38acaea12cc8d4867564e":"consulta", // ver375
+  "7117bdf68b16e57e4f357fc5fe53127aa4c1e5cba5244dbad0e17f506e59a5c3":"gestion"   // admin375 (misma del visor)
+};
+window.__rol=null;
+function sha256hex(str){
+  var C=(typeof crypto!=="undefined"&&crypto.subtle)?crypto:((typeof window!=="undefined"&&window.crypto&&window.crypto.subtle)?window.crypto:null);
+  if(!C)return Promise.resolve(null);
+  var enc=new TextEncoder().encode(str);
+  return C.subtle.digest("SHA-256",enc).then(function(buf){
+    return Array.prototype.map.call(new Uint8Array(buf),function(b){return ("0"+b.toString(16)).slice(-2);}).join("");
+  });
+}
+function aplicarRol(rol){
+  window.__rol=rol;
+  var ocultar=(rol==="consulta"); // consulta puro: sin solapas operativas
+  ["tabFirma","tabCom"].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el)el.style.display=ocultar?"none":"";
+  });
+  if(ocultar){
+    var vf=document.getElementById("viewFirma"),vc=document.getElementById("viewCom");
+    var enOperativa=(vf&&vf.classList.contains("active"))||(vc&&vc.classList.contains("active"));
+    if(enOperativa)setTab("stats");
+  }
+}
+function authGrant(h){
+  var rol=AUTH_ROLES[h]||"consulta";
+  var rem=document.getElementById("authRemember");
+  var recordar=!!(rem&&rem.checked);
+  try{
+    if(recordar)localStorage.setItem("c375_auth2",h);
+    else{localStorage.removeItem("c375_auth2");sessionStorage.setItem("c375_auth2",h);} // solo esta sesión del navegador
+  }catch(e){}
+  aplicarRol(rol);
+  var g=document.getElementById("authGate");
+  if(g){g.style.opacity="0";g.style.transition="opacity .3s";setTimeout(function(){g.style.display="none";},320);}
+  cargarDatos();
+}
+function authDeny(){
+  var e=document.getElementById("authError");if(e)e.style.display="";
+  var p=document.getElementById("authPass");if(p){p.value="";try{p.focus();}catch(x){}}
+}
+function authTry(){
+  var p=document.getElementById("authPass");if(!p)return;
+  var val=(p.value||"").trim();
+  if(!val){authDeny();return;}
+  sha256hex(val).then(function(h){
+    if(h&&AUTH_ROLES[h])authGrant(h);
+    else authDeny();
+  });
+}
+function authLogout(){
+  try{localStorage.removeItem("c375_auth2");sessionStorage.removeItem("c375_auth2");localStorage.removeItem("c375_auth");}catch(e){}
+  window.__rol=null;
+  var g=document.getElementById("authGate");
+  if(g){g.style.display="flex";g.style.opacity="1";}
+  var p=document.getElementById("authPass");if(p){p.value="";setTimeout(function(){try{p.focus();}catch(x){}},150);}
+  var rem=document.getElementById("authRemember");if(rem)rem.checked=false;
+  var e=document.getElementById("authError");if(e)e.style.display="none";
+}
+function initAuth(){
+  try{localStorage.removeItem("c375_auth");}catch(e){} // purgar el recuerdo automático de versiones viejas
+
+  var saved=null;
+  try{saved=localStorage.getItem("c375_auth2")||sessionStorage.getItem("c375_auth2");}catch(e){}
+  if(saved&&AUTH_ROLES[saved]){
+    aplicarRol(AUTH_ROLES[saved]);
+    var g=document.getElementById("authGate");if(g)g.style.display="none";
+    cargarDatos();
+  } else {
+    var p=document.getElementById("authPass");if(p)setTimeout(function(){try{p.focus();}catch(x){}},250);
+  }
+}
+
+/* arranque */
+initVista();
+initAuth();
+
+</script>
+</body>
+</html>
